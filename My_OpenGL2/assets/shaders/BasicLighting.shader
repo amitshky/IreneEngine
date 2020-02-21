@@ -32,7 +32,7 @@ struct Materials {
 };
 
 struct Light {
-	vec3 position;			// for point light
+	vec3 position;
 	vec3 direction;			// for directional light and spot light
 	float cutOff;			// for spot light
 	float outerCutOff;		// for smooth spot light

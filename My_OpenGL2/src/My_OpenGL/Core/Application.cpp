@@ -137,7 +137,6 @@ int main()
 			glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	// positions of the point lights
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3( 0.7f,  0.2f,  2.0f),
 		glm::vec3( 2.3f, -3.3f, -4.0f),
@@ -156,8 +155,8 @@ int main()
 	
 	// Shader
 	//std::shared_ptr<Shader> CubeShader = std::make_shared<Shader>("assets/shaders/3DCubeTexture.shader");
-	//std::shared_ptr<Shader> CubeShader = std::make_shared<Shader>("assets/shaders/BasicLighting.shader");
-	std::shared_ptr<Shader> CubeShader = std::make_shared<Shader>("assets/shaders/MultipleLights.shader");
+	std::shared_ptr<Shader> CubeShader = std::make_shared<Shader>("assets/shaders/BasicLighting.shader");
+	//std::shared_ptr<Shader> CubeShader = std::make_shared<Shader>("assets/shaders/MultipleLights.shader");
 
 	// Lighting Maps
 	CubeShader->Bind();
@@ -176,15 +175,15 @@ int main()
 	CubeShader->Unbind();
 
 	// Lamp object
-	std::shared_ptr<VertexArray> LampVA = std::make_shared<VertexArray>();
+	/*std::shared_ptr<VertexArray> LampVA = std::make_shared<VertexArray>();
 	LampVA->AddVertexBuffer(vbo);
 	std::shared_ptr<Shader> LampShader = std::make_shared<Shader>("assets/shaders/Light.shader");
 	vbo->Unbind();
 	LampVA->Unbind();
-	LampShader->Unbind();
+	LampShader->Unbind();*/
 
 	// Phong Lighting component's intensity
-	glm::vec3 diffuseColor = glm::vec3(0.5f); // decrease the influence
+	glm::vec3 diffuseColor = glm::vec3(0.8f); // decrease the influence
 	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
 	glm::vec3 specularColor = glm::vec3(1.0f);
 
@@ -217,66 +216,70 @@ int main()
 		// Cube object
 		CubeShader->Bind();
 		CubeShader->SetFloat3("u_ViewPos", camera.GetPosition());
-		// light properties
-		//CubeShader->SetFloat3("u_Light.position", lightPos);	// for point light
-		//CubeShader->SetFloat3("u_Light.position", camera.GetPosition());	// for spot light
-		//CubeShader->SetFloat3("u_Light.direction", camera.GetFront());
-		//CubeShader->SetFloat("u_Light.cutOff", glm::cos(glm::radians(20.5f)));
-		//CubeShader->SetFloat("u_Light.outerCutOff", glm::cos(glm::radians(27.5f)));
-		//CubeShader->SetFloat3("u_Light.ambient", ambientColor);
-		//CubeShader->SetFloat3("u_Light.diffuse", diffuseColor);
-		//CubeShader->SetFloat3("u_Light.specular", specularColor);
-		
+		//------------BasicLighting------------------//
+		{
+			// light properties
+			//CubeShader->SetFloat3("u_Light.position", lightPos);	// for point light
+			CubeShader->SetFloat3("u_Light.position", camera.GetPosition());	// for spot light
+			CubeShader->SetFloat3("u_Light.direction", camera.GetFront());
+			CubeShader->SetFloat("u_Light.cutOff", glm::cos(glm::radians(20.5f)));
+			CubeShader->SetFloat("u_Light.outerCutOff", glm::cos(glm::radians(27.5f)));
+			CubeShader->SetFloat3("u_Light.ambient", ambientColor);
+			CubeShader->SetFloat3("u_Light.diffuse", diffuseColor);
+			CubeShader->SetFloat3("u_Light.specular", specularColor);
+		}
+
 		//------------Multiple Lights----------------//
-		
-		// directional light
-		CubeShader->SetFloat3("u_DirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
-		CubeShader->SetFloat3("u_DirLight.ambient", ambientColor);
-		CubeShader->SetFloat3("u_DirLight.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-		CubeShader->SetFloat3("u_DirLight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-		// point light 1
-		CubeShader->SetFloat3("u_PointLight[0].position", pointLightPositions[0]);
-		CubeShader->SetFloat3("u_PointLight[0].ambient", ambientColor);
-		CubeShader->SetFloat3("u_PointLight[0].diffuse", diffuseColor);
-		CubeShader->SetFloat3("u_PointLight[0].specular", specularColor);
-		CubeShader->SetFloat("u_PointLight[0].constant", 1.0f);
-		CubeShader->SetFloat("u_PointLight[0].linear", 0.09);
-		CubeShader->SetFloat("u_PointLight[0].quadratic", 0.032);
-		// point light 2
-		CubeShader->SetFloat3("u_PointLight[1].position", pointLightPositions[1]);
-		CubeShader->SetFloat3("u_PointLight[1].ambient", ambientColor);
-		CubeShader->SetFloat3("u_PointLight[1].diffuse", diffuseColor);
-		CubeShader->SetFloat3("u_PointLight[1].specular", specularColor);
-		CubeShader->SetFloat("u_PointLight[1].constant", 1.0f);
-		CubeShader->SetFloat("u_PointLight[1].linear", 0.09);
-		CubeShader->SetFloat("u_PointLight[1].quadratic", 0.032);
-		// point light 3
-		CubeShader->SetFloat3("u_PointLight[2].position", pointLightPositions[2]);
-		CubeShader->SetFloat3("u_PointLight[2].ambient", ambientColor);
-		CubeShader->SetFloat3("u_PointLight[2].diffuse", diffuseColor);
-		CubeShader->SetFloat3("u_PointLight[2].specular", specularColor);
-		CubeShader->SetFloat("u_PointLight[2].constant", 1.0f);
-		CubeShader->SetFloat("u_PointLight[2].linear", 0.09);
-		CubeShader->SetFloat("u_PointLight[2].quadratic", 0.032);
-		// point light 4
-		CubeShader->SetFloat3("u_PointLight[3].position", pointLightPositions[3]);
-		CubeShader->SetFloat3("u_PointLight[3].ambient", ambientColor);
-		CubeShader->SetFloat3("u_PointLight[3].diffuse", diffuseColor);
-		CubeShader->SetFloat3("u_PointLight[3].specular", specularColor);
-		CubeShader->SetFloat("u_PointLight[3].constant", 1.0f);
-		CubeShader->SetFloat("u_PointLight[3].linear", 0.09);
-		CubeShader->SetFloat("u_PointLight[3].quadratic", 0.032);
-		// SpotLight
-		CubeShader->SetFloat3("u_SpotLight.position", camera.GetPosition());
-		CubeShader->SetFloat3("u_SpotLight.direction", camera.GetFront());
-		CubeShader->SetFloat3("u_SpotLight.ambient", ambientColor);
-		CubeShader->SetFloat3("u_SpotLight.diffuse", diffuseColor);
-		CubeShader->SetFloat3("u_SpotLight.specular", specularColor);
-		CubeShader->SetFloat("u_SpotLight.constant", 1.0f);
-		CubeShader->SetFloat("u_SpotLight.linear", 0.09);
-		CubeShader->SetFloat("u_SpotLight.quadratic", 0.032);
-		CubeShader->SetFloat("u_SpotLight.cutOff", glm::cos(glm::radians(12.5f)));
-		CubeShader->SetFloat("u_SpotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+		{
+			//// directional light
+			//CubeShader->SetFloat3("u_DirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+			//CubeShader->SetFloat3("u_DirLight.ambient", ambientColor);
+			//CubeShader->SetFloat3("u_DirLight.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+			//CubeShader->SetFloat3("u_DirLight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+			//// point light 1
+			//CubeShader->SetFloat3("u_PointLight[0].position", pointLightPositions[0]);
+			//CubeShader->SetFloat3("u_PointLight[0].ambient", ambientColor);
+			//CubeShader->SetFloat3("u_PointLight[0].diffuse", diffuseColor);
+			//CubeShader->SetFloat3("u_PointLight[0].specular", specularColor);
+			//CubeShader->SetFloat("u_PointLight[0].constant", 1.0f);
+			//CubeShader->SetFloat("u_PointLight[0].linear", 0.09);
+			//CubeShader->SetFloat("u_PointLight[0].quadratic", 0.032);
+			//// point light 2
+			//CubeShader->SetFloat3("u_PointLight[1].position", pointLightPositions[1]);
+			//CubeShader->SetFloat3("u_PointLight[1].ambient", ambientColor);
+			//CubeShader->SetFloat3("u_PointLight[1].diffuse", diffuseColor);
+			//CubeShader->SetFloat3("u_PointLight[1].specular", specularColor);
+			//CubeShader->SetFloat("u_PointLight[1].constant", 1.0f);
+			//CubeShader->SetFloat("u_PointLight[1].linear", 0.09);
+			//CubeShader->SetFloat("u_PointLight[1].quadratic", 0.032);
+			//// point light 3
+			//CubeShader->SetFloat3("u_PointLight[2].position", pointLightPositions[2]);
+			//CubeShader->SetFloat3("u_PointLight[2].ambient", ambientColor);
+			//CubeShader->SetFloat3("u_PointLight[2].diffuse", diffuseColor);
+			//CubeShader->SetFloat3("u_PointLight[2].specular", specularColor);
+			//CubeShader->SetFloat("u_PointLight[2].constant", 1.0f);
+			//CubeShader->SetFloat("u_PointLight[2].linear", 0.09);
+			//CubeShader->SetFloat("u_PointLight[2].quadratic", 0.032);
+			//// point light 4
+			//CubeShader->SetFloat3("u_PointLight[3].position", pointLightPositions[3]);
+			//CubeShader->SetFloat3("u_PointLight[3].ambient", ambientColor);
+			//CubeShader->SetFloat3("u_PointLight[3].diffuse", diffuseColor);
+			//CubeShader->SetFloat3("u_PointLight[3].specular", specularColor);
+			//CubeShader->SetFloat("u_PointLight[3].constant", 1.0f);
+			//CubeShader->SetFloat("u_PointLight[3].linear", 0.09);
+			//CubeShader->SetFloat("u_PointLight[3].quadratic", 0.032);
+			//// SpotLight
+			//CubeShader->SetFloat3("u_SpotLight.position", camera.GetPosition());
+			//CubeShader->SetFloat3("u_SpotLight.direction", camera.GetFront());
+			//CubeShader->SetFloat3("u_SpotLight.ambient", ambientColor);
+			//CubeShader->SetFloat3("u_SpotLight.diffuse", diffuseColor);
+			//CubeShader->SetFloat3("u_SpotLight.specular", specularColor);
+			//CubeShader->SetFloat("u_SpotLight.constant", 1.0f);
+			//CubeShader->SetFloat("u_SpotLight.linear", 0.09);
+			//CubeShader->SetFloat("u_SpotLight.quadratic", 0.032);
+			//CubeShader->SetFloat("u_SpotLight.cutOff", glm::cos(glm::radians(12.5f)));
+			//CubeShader->SetFloat("u_SpotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+		}
 
 		// material properties
 		CubeShader->SetFloat("u_Material.shininess", 64.0f);
@@ -300,18 +303,18 @@ int main()
 
 		// Lamp object
 
-		LampShader->Bind();
-		LampShader->SetMat4("u_Projection", projection);
-		LampShader->SetMat4("u_View", view);
-		LampVA->Bind();
-		for (unsigned int i = 0; i < 4; i++)
-		{
-			model = glm::mat4(1.0f);
-			model = glm::translate(model, pointLightPositions[i]);
-			model = glm::scale(model, glm::vec3(0.1f)); // Make it a smaller cube
-			LampShader->SetMat4("u_Model", model);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		//LampShader->Bind();
+		//LampShader->SetMat4("u_Projection", projection);
+		//LampShader->SetMat4("u_View", view);
+		//LampVA->Bind();
+		//for (unsigned int i = 0; i < 4; i++)
+		//{
+		//	model = glm::mat4(1.0f);
+		//	model = glm::translate(model, pointLightPositions[i]);
+		//	model = glm::scale(model, glm::vec3(0.1f)); // Make it a smaller cube
+		//	LampShader->SetMat4("u_Model", model);
+		//	glDrawArrays(GL_TRIANGLES, 0, 36);
+		//}
 
 		//glDrawElements(GL_TRIANGLES, SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr
 
