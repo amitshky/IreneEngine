@@ -71,7 +71,7 @@ void main()
 	
 	// specular
 	vec3 viewDir = normalize(u_ViewPos - FragPos);
-	vec3 reflectDir = reflect(-lightDir, norm);
+	//vec3 reflectDir = reflect(-lightDir, norm);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	//float spec = pow(max(dot(viewDir, reflectDir), 0.0f), u_Material.shininess); // the last parameter is the shininess value
 	float spec = pow(max(dot(norm, halfwayDir), 0.0f), u_Material.shininess);	// Blinn-Phong Lighting
