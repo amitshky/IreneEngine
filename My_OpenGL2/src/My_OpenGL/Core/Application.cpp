@@ -10,6 +10,7 @@
 #include "My_OpenGL/Renderer/Shader.h"
 #include "My_OpenGL/Renderer/Texture.h"
 #include "My_OpenGL/Renderer/VertexArray.h"
+#include "My_OpenGL/Renderer/Model.h"
 
 #include "imgui.h"
 #define IMGUI_IMPL_OPENGL_LOADER_GLAD
@@ -57,10 +58,10 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	//glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -187,6 +188,9 @@ int main()
 	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
 	glm::vec3 specularColor = glm::vec3(1.0f);
 
+	std::shared_ptr<Shader> ourShader = std::make_shared<Shader>("assets/shaders/ModelLoading.shader");
+	std::shared_ptr<Model> ourModel = std::make_shared<Model>("assets/3DModels/nanosuit/nanosuit.obj");
+
 	ImGuiAttach(window);
 	
 	// render loop
@@ -200,7 +204,7 @@ int main()
 		processInput(window);
 
 		// render
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//lightPos.x = sin(glfwGetTime() * 2.0f);
@@ -216,7 +220,7 @@ int main()
 		// Cube object
 		CubeShader->Bind();
 		CubeShader->SetFloat3("u_ViewPos", camera.GetPosition());
-		//------------BasicLighting------------------//
+		//------------Basic Lighting Shader----------//
 		{
 			// light properties
 			//CubeShader->SetFloat3("u_Light.position", lightPos);	// for point light
@@ -230,12 +234,15 @@ int main()
 		}
 
 		//------------Multiple Lights----------------//
+		// directional light
 		{
-			//// directional light
 			//CubeShader->SetFloat3("u_DirLight.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
 			//CubeShader->SetFloat3("u_DirLight.ambient", ambientColor);
 			//CubeShader->SetFloat3("u_DirLight.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
 			//CubeShader->SetFloat3("u_DirLight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+		}
+		// Point Lights
+		{
 			//// point light 1
 			//CubeShader->SetFloat3("u_PointLight[0].position", pointLightPositions[0]);
 			//CubeShader->SetFloat3("u_PointLight[0].ambient", ambientColor);
@@ -268,7 +275,9 @@ int main()
 			//CubeShader->SetFloat("u_PointLight[3].constant", 1.0f);
 			//CubeShader->SetFloat("u_PointLight[3].linear", 0.09);
 			//CubeShader->SetFloat("u_PointLight[3].quadratic", 0.032);
-			// SpotLight
+		}
+		// SpotLight
+		{
 			CubeShader->SetFloat3("u_SpotLight.position", camera.GetPosition());
 			CubeShader->SetFloat3("u_SpotLight.direction", camera.GetFront());
 			CubeShader->SetFloat3("u_SpotLight.ambient", ambientColor);
@@ -291,7 +300,7 @@ int main()
 		specularMap->Bind(1);
 
 		CubeVA->Bind();
-		for (unsigned int i = 0; i < 10; i++)
+		for (unsigned int i = 1; i < 10; i++)
 		{
 			model = glm::mat4(1.0f);
 			model = glm::translate(glm::mat4(1.0f), cubePositions[i]);
@@ -317,6 +326,31 @@ int main()
 		//}
 
 		//glDrawElements(GL_TRIANGLES, SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr
+		
+		ourShader->Bind();
+		ourShader->SetFloat3("u_ViewPos", camera.GetPosition());
+
+		//ourShader->SetFloat3("u_Light.position", lightPos);	// for point light
+		ourShader->SetFloat3("u_Light.position", camera.GetPosition());	// for spot light
+		ourShader->SetFloat3("u_Light.direction", camera.GetFront());
+		ourShader->SetFloat("u_Light.cutOff", glm::cos(glm::radians(12.5f)));
+		ourShader->SetFloat("u_Light.outerCutOff", glm::cos(glm::radians(15.0f)));
+		ourShader->SetFloat3("u_Light.ambient", ambientColor);
+		ourShader->SetFloat3("u_Light.diffuse", diffuseColor);
+		ourShader->SetFloat3("u_Light.specular", specularColor);
+		ourShader->SetFloat("u_Light.constant", 1.0f);
+		ourShader->SetFloat("u_Light.linear", 0.09f);
+		ourShader->SetFloat("u_Light.quadratic", 0.032f);
+
+		ourShader->SetMat4("u_Projection", projection);
+		ourShader->SetMat4("u_View", view);
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.2f));
+		ourShader->SetMat4("u_Model", model);
+
+		ourModel->Draw(ourShader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

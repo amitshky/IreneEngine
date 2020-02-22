@@ -29,7 +29,7 @@ void VertexBuffer::Unbind() const
 
 //--------------------------------------------------------------------------------------------
 
-	// Index Buffer
+// Index Buffer
 IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : m_Count(count)
 {
 	glGenBuffers(1, &m_RendererID);
