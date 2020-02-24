@@ -2,23 +2,12 @@
 
 #include <glad/glad.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include "VertexArray.h"
+#include "Buffer.h"
 #include "Shader.h"
+#include "Texture.h"
 
-struct Vertex {
-	// position
-	glm::vec3 Position;
-	// normal
-	glm::vec3 Normal;
-	// texCoords
-	glm::vec2 TexCoords;
-	// tangent
-	glm::vec3 Tangent;
-	// bitangent
-	glm::vec3 Bitangent;
-};
+// Vertex struct defined in Buffer.h
 
 struct Texture {
 	unsigned int id;
@@ -29,7 +18,7 @@ struct Texture {
 class Mesh
 {
 public:
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+	Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<Texture> textures);
 	void Draw(std::shared_ptr<Shader>& shader);
 	~Mesh() {}
 
@@ -37,11 +26,12 @@ private:
 	void Init();
 
 private:
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
-	unsigned int VAO;
-
-	unsigned int VBO, EBO;
 	
+	///// refactored
+	std::shared_ptr<VertexArray> m_VAO;
+	std::shared_ptr<VertexBuffer> m_VBO;
+	std::shared_ptr<IndexBuffer> m_EBO;
+	std::vector<Texture2D> m_Textures;
+
 };

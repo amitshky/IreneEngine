@@ -166,8 +166,6 @@ int main()
 	std::shared_ptr<Texture2D> specularMap = std::make_shared<Texture2D>("assets/textures/container2_specular.png");
 	CubeShader->SetInt("u_Material.specular", 1);
 
-	
-
 	vbo->Unbind();
 	CubeVA->Unbind();
 	CubeShader->Unbind();
@@ -201,7 +199,7 @@ int main()
 		processInput(window);
 
 		// render
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//lightPos.x = sin(glfwGetTime() * 2.0f);

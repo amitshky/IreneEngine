@@ -1,5 +1,21 @@
 #pragma once
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+struct Vertex {
+	// position
+	glm::vec3 Position;
+	// normal
+	glm::vec3 Normal;
+	// texCoords
+	glm::vec2 TexCoords;
+	// tangent
+	glm::vec3 Tangent;
+	// bitangent
+	glm::vec3 Bitangent;
+};
+
 enum class ShaderDataType
 {
 	None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
@@ -100,6 +116,7 @@ class VertexBuffer
 {
 public:
 	VertexBuffer(float* vertices, uint32_t size);
+	VertexBuffer(std::vector<Vertex>& vertices);
 	~VertexBuffer();
 
 	void Bind() const;
@@ -117,6 +134,7 @@ class IndexBuffer
 {
 public:
 	IndexBuffer(uint32_t* indices, uint32_t count);
+	IndexBuffer(std::vector<uint32_t>& indices, uint32_t count);
 	~IndexBuffer();
 
 	void Bind() const;

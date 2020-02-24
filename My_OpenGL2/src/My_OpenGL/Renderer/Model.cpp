@@ -46,7 +46,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
 Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
+	std::vector<uint32_t> indices;
 	std::vector<Texture> textures;
 
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
