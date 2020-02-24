@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Shader.h"
-
 #include <glad/glad.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Shader.h"
 
 struct Vertex {
 	// position

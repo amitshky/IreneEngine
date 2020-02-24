@@ -166,10 +166,7 @@ int main()
 	std::shared_ptr<Texture2D> specularMap = std::make_shared<Texture2D>("assets/textures/container2_specular.png");
 	CubeShader->SetInt("u_Material.specular", 1);
 
-	// Light Intensity attenuation values
-	CubeShader->SetFloat("u_Light.constant", 1.0f);
-	CubeShader->SetFloat("u_Light.linear", 0.09f);
-	CubeShader->SetFloat("u_Light.quadratic", 0.032f);
+	
 
 	vbo->Unbind();
 	CubeVA->Unbind();
@@ -185,7 +182,7 @@ int main()
 
 	// Phong Lighting component's intensity
 	glm::vec3 diffuseColor = glm::vec3(0.8f); // decrease the influence
-	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
+	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.1f); // low influence
 	glm::vec3 specularColor = glm::vec3(1.0f);
 
 	std::shared_ptr<Shader> ourShader = std::make_shared<Shader>("assets/shaders/ModelLoading.shader");
@@ -204,7 +201,7 @@ int main()
 		processInput(window);
 
 		// render
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//lightPos.x = sin(glfwGetTime() * 2.0f);
@@ -222,7 +219,7 @@ int main()
 		CubeShader->SetFloat3("u_ViewPos", camera.GetPosition());
 		//------------Basic Lighting Shader----------//
 		{
-			// light properties
+			//// light properties
 			//CubeShader->SetFloat3("u_Light.position", lightPos);	// for point light
 			//CubeShader->SetFloat3("u_Light.position", camera.GetPosition());	// for spot light
 			//CubeShader->SetFloat3("u_Light.direction", camera.GetFront());
@@ -231,6 +228,10 @@ int main()
 			//CubeShader->SetFloat3("u_Light.ambient", ambientColor);
 			//CubeShader->SetFloat3("u_Light.diffuse", diffuseColor);
 			//CubeShader->SetFloat3("u_Light.specular", specularColor);
+			//// Light Intensity attenuation values
+			//CubeShader->SetFloat("u_Light.constant", 1.0f);
+			//CubeShader->SetFloat("u_Light.linear", 0.09f);
+			//CubeShader->SetFloat("u_Light.quadratic", 0.032f);
 		}
 
 		//------------Multiple Lights----------------//
@@ -330,7 +331,6 @@ int main()
 		ourShader->Bind();
 		ourShader->SetFloat3("u_ViewPos", camera.GetPosition());
 
-		//ourShader->SetFloat3("u_Light.position", lightPos);	// for point light
 		ourShader->SetFloat3("u_Light.position", camera.GetPosition());	// for spot light
 		ourShader->SetFloat3("u_Light.direction", camera.GetFront());
 		ourShader->SetFloat("u_Light.cutOff", glm::cos(glm::radians(12.5f)));

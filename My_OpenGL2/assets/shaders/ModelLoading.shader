@@ -65,15 +65,15 @@ void main()
 	// specular
 	vec3 viewDir = normalize(u_ViewPos - FragPos);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
-	float spec = pow(max(dot(norm, halfwayDir), 0.0f), 32.0f);	// Blinn-Phong Lighting
+	float spec = pow(max(dot(norm, halfwayDir), 0.0f), 64.0f);	// Blinn-Phong Lighting
 	vec3 specular = u_Light.specular * spec * texture(texture_specular1, TexCoords).rgb;
 
 	// spot light
-	float theta = dot(lightDir, normalize(-u_Light.direction));	// for spot light
-	float epsilon = u_Light.cutOff - u_Light.outerCutOff;
-	float intensity = clamp((theta - u_Light.outerCutOff) / epsilon, 0.0, 1.0);	// clamps from 0 - 1
-	diffuse *= intensity;
-	specular *= intensity;
+	//float theta = dot(lightDir, normalize(-u_Light.direction));	// for spot light
+	//float epsilon = u_Light.cutOff - u_Light.outerCutOff;
+	//float intensity = clamp((theta - u_Light.outerCutOff) / epsilon, 0.0, 1.0);	// clamps from 0 - 1
+	//diffuse *= intensity;
+	//specular *= intensity;
 
 	// Intensity attenuation
 	float distance = length(u_Light.position - FragPos);

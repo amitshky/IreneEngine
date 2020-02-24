@@ -24,6 +24,7 @@ IncludeDir["Glad"] = "My_OpenGL2/vendor/Glad/include"
 IncludeDir["ImGui"] = "My_OpenGL2/vendor/imgui"
 IncludeDir["glm"] = "My_OpenGL2/vendor/glm"
 IncludeDir["stb_image"] = "My_OpenGL2/vendor/stb_image"
+IncludeDir["assimp"] = "My_OpenGL2/vendor/assimp/include"
 
 group "Dependencies"
 	include "My_OpenGL2/vendor/GLFW"
@@ -60,6 +61,11 @@ project "My_OpenGL2"
 		"_CRT_SECURE_NO_WARNINGS"
 	}
 
+	libdirs
+	{
+		"$(SolutionDir)My_OpenGL2/vendor/assimp/lib"
+	}
+
 	includedirs
 	{
 		"%{prj.name}/src",
@@ -68,7 +74,8 @@ project "My_OpenGL2"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.assimp}"
 	}
 
 	links
@@ -76,7 +83,8 @@ project "My_OpenGL2"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"opengl32.lib"
+		"opengl32.lib",
+		"assimp-vc142-mtd.lib"
 	}
 
 	filter "system:windows"
