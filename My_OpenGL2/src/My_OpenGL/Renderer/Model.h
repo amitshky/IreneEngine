@@ -14,8 +14,6 @@
 #include "Shader.h"
 #include "Mesh.h"
 
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
-
 class Model
 {
 public:
@@ -24,14 +22,16 @@ public:
 	void Draw(std::shared_ptr<Shader>& shader);
 
 private:
-	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
+	std::vector<std::shared_ptr<Texture2D>> loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 	void LoadModel(const std::string& path);
 	void ProcessNode(aiNode* node, const aiScene* scene);
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
 private:
 	std::vector<Mesh> m_Meshes;
-	std::vector<Texture> m_TexturesLoaded;
+	std::vector<std::shared_ptr<Texture2D>> m_TexturesLoaded;
 	std::string m_Directory;
 	bool m_GammaCorrection;
+
+	std::vector<Texture> m_TexturesLoaded2;
 };

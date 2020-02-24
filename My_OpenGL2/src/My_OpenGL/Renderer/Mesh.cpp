@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<std::shared_ptr<Texture2D>>& textures)
 {
 	m_VAO = std::make_shared<VertexArray>();
 	m_VBO = std::make_shared<VertexBuffer>(vertices);
 	m_EBO = std::make_shared<IndexBuffer>(indices, indices.size());
+	m_Textures = textures;
 
 	Init();
 }
@@ -17,12 +18,11 @@ void Mesh::Draw(std::shared_ptr<Shader>& shader)
 	unsigned int specularNr = 1;
 	unsigned int normalNr = 1;
 	unsigned int heightNr = 1;
-	for (unsigned int i = 0; i < textures.size(); i++)
+	for (unsigned int i = 0; i < m_Textures.size(); i++)
 	{
-		glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
 		// retrieve texture number (the N in diffuse_textureN)
 		std::string number;
-		std::string name = textures[i].type;
+		std::string name = m_Textures[i]->GetType();
 		if (name == "texture_diffuse")
 			number = std::to_string(diffuseNr++);
 		else if (name == "texture_specular")
@@ -33,17 +33,13 @@ void Mesh::Draw(std::shared_ptr<Shader>& shader)
 			number = std::to_string(heightNr++); // transfer unsigned int to stream
 
 		shader->SetInt((name + number).c_str(), i);
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
-		//m_Textures[i].Bind();
+		m_Textures[i]->Bind(i);
 	}
 
 	// draw mesh
 	m_VAO->Bind();
 	glDrawElements(GL_TRIANGLES, m_VAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, 0);
 	m_VAO->Unbind();
-
-	// always good practice to set everything back to defaults once configured.
-	glActiveTexture(GL_TEXTURE0);
 }
 
 void Mesh::Init()

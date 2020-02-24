@@ -18,7 +18,7 @@ struct Texture {
 class Mesh
 {
 public:
-	Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<Texture> textures);
+	Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<std::shared_ptr<Texture2D>>& textures);
 	void Draw(std::shared_ptr<Shader>& shader);
 	~Mesh() {}
 
@@ -26,12 +26,8 @@ private:
 	void Init();
 
 private:
-	std::vector<Texture> textures;
-	
-	///// refactored
 	std::shared_ptr<VertexArray> m_VAO;
 	std::shared_ptr<VertexBuffer> m_VBO;
 	std::shared_ptr<IndexBuffer> m_EBO;
-	std::vector<Texture2D> m_Textures;
-
+	std::vector<std::shared_ptr<Texture2D>> m_Textures;
 };

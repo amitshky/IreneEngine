@@ -183,6 +183,10 @@ int main()
 	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.1f); // low influence
 	glm::vec3 specularColor = glm::vec3(1.0f);
 
+	// Spot Light properties
+	constexpr float innerCutOff = glm::radians(12.5f);
+	constexpr float outerCutOff = glm::radians(120.0f);
+
 	std::shared_ptr<Shader> ourShader = std::make_shared<Shader>("assets/shaders/ModelLoading.shader");
 	std::shared_ptr<Model> ourModel = std::make_shared<Model>("assets/3DModels/nanosuit/nanosuit.obj");
 
@@ -285,8 +289,8 @@ int main()
 			CubeShader->SetFloat("u_SpotLight.constant", 1.0f);
 			CubeShader->SetFloat("u_SpotLight.linear", 0.09);
 			CubeShader->SetFloat("u_SpotLight.quadratic", 0.032);
-			CubeShader->SetFloat("u_SpotLight.cutOff", glm::cos(glm::radians(12.5f)));
-			CubeShader->SetFloat("u_SpotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+			CubeShader->SetFloat("u_SpotLight.cutOff", glm::cos(innerCutOff));
+			CubeShader->SetFloat("u_SpotLight.outerCutOff", glm::cos(outerCutOff));
 		}
 
 		// material properties
@@ -326,13 +330,15 @@ int main()
 
 		//glDrawElements(GL_TRIANGLES, SquareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr
 		
+		// Model Loading
+		
 		ourShader->Bind();
 		ourShader->SetFloat3("u_ViewPos", camera.GetPosition());
 
 		ourShader->SetFloat3("u_Light.position", camera.GetPosition());	// for spot light
 		ourShader->SetFloat3("u_Light.direction", camera.GetFront());
-		ourShader->SetFloat("u_Light.cutOff", glm::cos(glm::radians(12.5f)));
-		ourShader->SetFloat("u_Light.outerCutOff", glm::cos(glm::radians(15.0f)));
+		ourShader->SetFloat("u_Light.cutOff", glm::cos(innerCutOff));
+		ourShader->SetFloat("u_Light.outerCutOff", glm::cos(outerCutOff));
 		ourShader->SetFloat3("u_Light.ambient", ambientColor);
 		ourShader->SetFloat3("u_Light.diffuse", diffuseColor);
 		ourShader->SetFloat3("u_Light.specular", specularColor);
