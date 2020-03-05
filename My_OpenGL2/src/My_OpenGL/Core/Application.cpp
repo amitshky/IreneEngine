@@ -185,7 +185,7 @@ int main()
 
 	// Spot Light properties
 	constexpr float innerCutOff = glm::radians(12.5f);
-	constexpr float outerCutOff = glm::radians(120.0f);
+	constexpr float outerCutOff = glm::radians(20.0f);
 
 	std::shared_ptr<Shader> ourShader = std::make_shared<Shader>("assets/shaders/ModelLoading.shader");
 	std::shared_ptr<Model> ourModel = std::make_shared<Model>("assets/3DModels/nanosuit/nanosuit.obj");
@@ -203,7 +203,7 @@ int main()
 		processInput(window);
 
 		// render
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//lightPos.x = sin(glfwGetTime() * 2.0f);
