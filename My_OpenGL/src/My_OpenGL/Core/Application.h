@@ -4,10 +4,10 @@
 
 #include "Window.h"
 #include "My_OpenGL/Events/Event.h"
-//#include "My_OpenGL/Core/LayerStack.h"
+#include "My_OpenGL/Core/LayerStack.h"
 #include "My_OpenGL/Events/ApplicationEvent.h"
 
-//#include "My_OpenGL/Core/Timestep.h"
+#include "My_OpenGL/Core/Timestep.h"
 
 //#include "My_OpenGL/ImGui/ImGuiLayer.h"
 
@@ -22,8 +22,8 @@ namespace myo {
 		void Run();
 		void OnEvent(Event& e);
 
-		// PushLayer
-		// PushOverlay
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
@@ -36,11 +36,11 @@ namespace myo {
 		static Application* s_Instance;
 
 		std::unique_ptr<Window> m_Window;
-		//ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		bool m_Minimized = false;
-		//LayerStack m_LayerStack;
-		//float m_LastFrameTime = 0.0f;
+		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
+		//ImGuiLayer* m_ImGuiLayer;
 	};
 
 	// defined in a Client

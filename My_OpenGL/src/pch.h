@@ -17,6 +17,7 @@
 #include <unordered_set>
 
 #include "My_OpenGL/Core/Log.h"
+//#include "My_OpenGL/Debug/Instrumentor.h"		// Profiling header
 
 // platform specific
 #ifdef PLATFORM_WINDOWS

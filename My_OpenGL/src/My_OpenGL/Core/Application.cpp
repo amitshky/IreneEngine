@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Application.h"
 
+//#include "My_OpenGL/Renderer/Renderer.h"
+#include "Input.h"
+
 #include <GLFW/glfw3.h>
 
 namespace myo {
@@ -36,12 +39,24 @@ namespace myo {
 
 		CORE_TRACE("{0}", e);
 
-		//for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)	// going backwards
-		//{
-		//	(*it)->OnEvent(e);
-		//	if (e.Handled)
-		//		break;
-		//}
+		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)	// going backwards
+		{
+			(*it)->OnEvent(e);
+			if (e.Handled)
+				break;
+		}
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
+	}
+
+	void Application::PushOverlay(Layer* overlay)
+	{
+		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
