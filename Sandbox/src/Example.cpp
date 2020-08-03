@@ -146,7 +146,7 @@ int main()
 		glm::vec3(0.0f,  0.0f, -3.0f)
 	};
 
-	/// Cube Vertex Array
+	/// Cube Vertex Array // also for lamp
 	std::shared_ptr<myo::VertexArray> CubeVA = std::make_shared<myo::VertexArray>();
 	std::shared_ptr<myo::VertexBuffer> vbo = std::make_shared<myo::VertexBuffer>(vertices, sizeof(vertices));
 	vbo->SetLayout({
