@@ -17,6 +17,11 @@ namespace myo {
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+
+		//Renderer::Init();
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 	Application::~Application()
@@ -27,6 +32,20 @@ namespace myo {
 	{
 		while (m_Running)
 		{
+			float time = (float)glfwGetTime();		// Temporary // Platform::GetTime()
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+			if (!m_Minimized)
+			{
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
+				m_ImGuiLayer->Begin();
+				{
+					for (Layer* layer : m_LayerStack)
+						layer->OnImGuiRender();
+				}
+				m_ImGuiLayer->End();
+			}
 			m_Window->OnUpdate();
 		}
 	}
@@ -37,7 +56,7 @@ namespace myo {
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
 
-		CORE_TRACE("{0}", e);
+		//CORE_TRACE("{0}", e);
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)	// going backwards
 		{

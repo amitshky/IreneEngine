@@ -9,7 +9,7 @@
 
 #include "My_OpenGL/Core/Timestep.h"
 
-//#include "My_OpenGL/ImGui/ImGuiLayer.h"
+#include "My_OpenGL/ImGui/ImGuiLayer.h"
 
 namespace myo {
 
@@ -40,7 +40,7 @@ namespace myo {
 		bool m_Minimized = false;
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
-		//ImGuiLayer* m_ImGuiLayer;
+		ImGuiLayer* m_ImGuiLayer;
 	};
 
 	// defined in a Client
