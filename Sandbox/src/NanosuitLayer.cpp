@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 
 NanosuitLayer::NanosuitLayer()
-	: Layer("Example"), m_Camera(glm::vec3(0.0f, 0.0f, 3.0f)), m_CameraController(16.0f / 9.0f)
+	: Layer("Example"), m_CameraController(16.0f / 9.0f)
 {
 	// Blending
 	glEnable(GL_BLEND);
@@ -93,7 +93,6 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 	m_LightPos.z = cos(glfwGetTime() * 2.0f);
 
 	// view/projection transformation
-	//m_Camera.SetProjection(45.0f, 16.0f / 9.0f);
 	glm::mat4 projection = m_CameraController.GetCamera().GetProjectionMatrix();
 	glm::mat4 view = m_CameraController.GetCamera().GetViewMatrix();
 	// world coordinates
@@ -116,8 +115,8 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 	m_NanosuitShader->Bind();
 	m_NanosuitShader->SetFloat3("u_ViewPos", m_CameraController.GetCamera().GetPosition());
 
-	//m_NanosuitShader->SetFloat3("u_Light.position", m_Camera.GetPosition());	// for spot light
-	//m_NanosuitShader->SetFloat3("u_Light.direction", m_Camera.GetFront());
+	//m_NanosuitShader->SetFloat3("u_Light.position", m_CameraController.GetCamera().GetPosition());	// for spot light
+	//m_NanosuitShader->SetFloat3("u_Light.direction", m_CameraController.GetCamera().GetFront());
 	m_NanosuitShader->SetFloat("u_Light.cutOff", glm::cos(m_InnerCutOff));
 	m_NanosuitShader->SetFloat("u_Light.m_OuterCutOff", glm::cos(m_OuterCutOff));
 

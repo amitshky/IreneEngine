@@ -9,36 +9,14 @@
 
 namespace myo {
 
-	enum class CameraMovement : int {
-		FORWARD,
-		BACKWARD,
-		LEFT,
-		RIGHT,
-		UP,
-		DOWN,
-		PITCHUP,
-		PITCHDOWN,
-		YAWLEFT,
-		YAWRIGHT
-	};
-
-	const float YAW = -90.0f;
-	const float PITCH = 0.0f;
-	const float SPEED = 2.5f;
-	const float SENSITIVITY = 0.05f;
-	const float ZOOM = 45.0f;
-
 	class Camera
 	{
 	public:
-		Camera(float aspectRatio, float zoom, glm::vec3& position = glm::vec3(0.0f), glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+		Camera(float aspectRatio, float zoom, glm::vec3& position = glm::vec3(0.0f), glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f);
 		void SetProjection(float zoom, float aspectRatio);
 
 		const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
-
-		float GetRotation() const { return m_Rotation; }
-		void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
 
 		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
@@ -48,18 +26,16 @@ namespace myo {
 		const glm::vec3& GetUp() const { return m_Up; }
 		const glm::vec3& GetRight() const { return m_Right; }
 
-		///////////////////////////////////////////////////
+		void UpdatePitch(float pitch) { m_Pitch += pitch; }
+		float GetPitch() { return m_Pitch; }
+		void UpdateYaw(float yaw) { m_Yaw += yaw; }
+		float GetYaw() { return m_Yaw; }
 
-		Camera(glm::vec3 position = glm::vec3(0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
-		//Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
-
-		//glm::mat4 GetViewMatrix();
-		//void ProcessKeyboard(CameraMovement direction, float deltaTime);
-		//void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
-		//void ProcessMouseScroll(float yoffset);
-
-		//inline float GetZoom() const { return m_Zoom; }
-		////inline glm::vec3 GetPosition() const { return m_Position; }
+		void ClampPitch(float min, float max)
+		{
+			m_Pitch = std::max(m_Pitch, min);
+			m_Pitch = std::min(m_Pitch, max);
+		}
 
 	private:
 		void RecalculateViewMatrix();
@@ -70,10 +46,8 @@ namespace myo {
 		glm::mat4 m_ViewProjectionMatrix;
 
 		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
-		float m_Rotation = 0.0f;
 
 		////////////////////
-		//glm::vec3 m_Position;
 		glm::vec3 m_Front;
 		glm::vec3 m_Up;
 		glm::vec3 m_Right;
@@ -81,10 +55,6 @@ namespace myo {
 
 		float m_Yaw;
 		float m_Pitch;
-
-		//float m_MovementSpeed;
-		//float m_MouseSensitivity;
-		//float m_Zoom;
 	};
 
 }

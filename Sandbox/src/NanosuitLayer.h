@@ -18,7 +18,6 @@ public:
 	void OnEvent(myo::Event& e) override;
 
 private:
-	myo::Camera m_Camera;
 	myo::CameraController m_CameraController;
 
 	/// Spot Light properties
