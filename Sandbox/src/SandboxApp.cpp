@@ -1,14 +1,14 @@
 #include <My_OpenGL.h>
 #include <My_OpenGL/Core/EntryPoint.h>
 
-#include "ExampleLayer.h"
+#include "NanosuitLayer.h"
 
 class Sandbox : public myo::Application
 {
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		PushLayer(new NanosuitLayer());
 	}
 	~Sandbox() {}
 

@@ -31,22 +31,49 @@ namespace myo {
 	class Camera
 	{
 	public:
+		Camera(float aspectRatio, float zoom, glm::vec3& position = glm::vec3(0.0f), glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
+		void SetProjection(float zoom, float aspectRatio);
+
+		const glm::vec3& GetPosition() const { return m_Position; }
+		void SetPosition(glm::vec3& position) { m_Position = position; RecalculateViewMatrix(); }
+
+		float GetRotation() const { return m_Rotation; }
+		void SetRotation(float rotation) { m_Rotation = rotation; RecalculateViewMatrix(); }
+
+		const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
+
+		const glm::vec3& GetFront() const { return m_Front; }
+		const glm::vec3& GetUp() const { return m_Up; }
+		const glm::vec3& GetRight() const { return m_Right; }
+
+		///////////////////////////////////////////////////
+
 		Camera(glm::vec3 position = glm::vec3(0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
-		Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
-		glm::mat4 GetViewMatrix();
-		void ProcessKeyboard(CameraMovement direction, float deltaTime);
-		void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
-		void ProcessMouseScroll(float yoffset);
+		//Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch);
 
-		inline float GetZoom() const { return m_Zoom; }
-		inline glm::vec3 GetPosition() const { return m_Position; }
-		inline glm::vec3 GetFront() const { return m_Front; }
+		//glm::mat4 GetViewMatrix();
+		//void ProcessKeyboard(CameraMovement direction, float deltaTime);
+		//void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
+		//void ProcessMouseScroll(float yoffset);
 
-	private:
-		void UpdateCameraVectors();
+		//inline float GetZoom() const { return m_Zoom; }
+		////inline glm::vec3 GetPosition() const { return m_Position; }
 
 	private:
-		glm::vec3 m_Position;
+		void RecalculateViewMatrix();
+
+	private:
+		glm::mat4 m_ProjectionMatrix;
+		glm::mat4 m_ViewMatrix;
+		glm::mat4 m_ViewProjectionMatrix;
+
+		glm::vec3 m_Position = { 0.0f, 0.0f, 0.0f };
+		float m_Rotation = 0.0f;
+
+		////////////////////
+		//glm::vec3 m_Position;
 		glm::vec3 m_Front;
 		glm::vec3 m_Up;
 		glm::vec3 m_Right;
@@ -55,9 +82,9 @@ namespace myo {
 		float m_Yaw;
 		float m_Pitch;
 
-		float m_MovementSpeed;
-		float m_MouseSensitivity;
-		float m_Zoom;
+		//float m_MovementSpeed;
+		//float m_MouseSensitivity;
+		//float m_Zoom;
 	};
 
 }

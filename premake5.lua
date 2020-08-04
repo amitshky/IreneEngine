@@ -126,8 +126,10 @@ project "Sandbox"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
 	}
+
+	excludes "%{prj.name}/src/Example.cpp"
 
 	includedirs
 	{

@@ -26,6 +26,7 @@
 
 #include "My_OpenGL/Renderer/OrthographicCamera.h"
 #include "My_OpenGL/Renderer/Camera.h"
+#include "My_OpenGL/Renderer/CameraController.h"
 #include "My_OpenGL/Renderer/Mesh.h"
 #include "My_OpenGL/Renderer/Model.h"
 // ---------------------------
