@@ -73,8 +73,8 @@ namespace myo {
 	bool CameraController::OnWindowResized(WindowResizeEvent& e)
 	{
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		glViewport(0, 0, (float)e.GetWidth(), (float)e.GetHeight());
 		m_Camera.SetProjection(m_ZoomLevel, m_AspectRatio);
+		glViewport(0, 0, (float)e.GetWidth(), (float)e.GetHeight()); // move this to renderer
 		return false;
 	}
 

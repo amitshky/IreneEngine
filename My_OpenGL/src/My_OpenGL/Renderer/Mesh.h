@@ -17,18 +17,18 @@ namespace myo {
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<std::shared_ptr<Texture2D>>& textures);
-		void Draw(std::shared_ptr<Shader>& shader);
+		Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<Ref<Texture2D>>& textures);
+		void Draw(Ref<Shader>& shader);
 		~Mesh() {}
 
 	private:
 		void Init();
 
 	private:
-		std::shared_ptr<VertexArray> m_VAO;
-		std::shared_ptr<VertexBuffer> m_VBO;
-		std::shared_ptr<IndexBuffer> m_EBO;
-		std::vector<std::shared_ptr<Texture2D>> m_Textures;
+		Ref<VertexArray> m_VAO;
+		Ref<VertexBuffer> m_VBO;
+		Ref<IndexBuffer> m_EBO;
+		std::vector<Ref<Texture2D>> m_Textures;
 	};
 
 }

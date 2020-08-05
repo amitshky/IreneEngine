@@ -10,9 +10,7 @@
 #include "My_OpenGL/Core/KeyCodes.h"
 #include "My_OpenGL/Core/MouseButtonCodes.h"
 
-//#include "My_OpenGL/ImGui/ImGuiLayer.h"
-
-//#include "My_OpenGL/Renderer/OrthographicCameraController.h"
+#include "My_OpenGL/ImGui/ImGuiLayer.h"
 
 // ----Renderer--------------
 //#include "My_OpenGL/Renderer/Renderer.h"
@@ -24,10 +22,10 @@
 #include "My_OpenGL/Renderer/Texture.h"
 #include "My_OpenGL/Renderer/VertexArray.h"
 
-#include "My_OpenGL/Renderer/OrthographicCamera.h"
-#include "My_OpenGL/Renderer/Camera.h"
-#include "My_OpenGL/Renderer/CameraController.h"
 #include "My_OpenGL/Renderer/Mesh.h"
 #include "My_OpenGL/Renderer/Model.h"
+
+#include "My_OpenGL/Renderer/Camera.h"
+#include "My_OpenGL/Renderer/CameraController.h"
 // ---------------------------
 

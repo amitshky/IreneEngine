@@ -70,11 +70,6 @@ NanosuitLayer::NanosuitLayer()
 	m_LampVA->Unbind();
 	m_LampShader->Unbind();
 
-	/// Phong Lighting component's intensity
-	m_DiffuseColor = glm::vec3(0.8f) * 3.0f; // decrease the influence
-	m_AmbientColor = m_DiffuseColor * glm::vec3(0.2f); // low influence
-	m_SpecularColor = glm::vec3(1.0f);
-
 	/// Model loading
 	m_NanosuitShader = myo::CreateRef<myo::Shader>("assets/shaders/ModelLoading.shader");
 	m_NanosuitModel = myo::CreateRef<myo::Model>("assets/3DModels/nanosuit/nanosuit.obj");
@@ -82,10 +77,15 @@ NanosuitLayer::NanosuitLayer()
 
 void NanosuitLayer::OnUpdate(myo::Timestep ts)
 {
-	glClearColor(m_BgColor.x, m_BgColor.y, m_BgColor.z, m_BgColor.w);
+	glClearColor(0.02f, 0.02f, 0.02f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	m_CameraController.OnUpdate(ts);
+
+	/// Phong Lighting components
+	m_DiffuseColor = glm::vec3(m_LightColor) * m_LightIntensity; // decrease the influence
+	m_AmbientColor = m_DiffuseColor * glm::vec3(0.1f); // low influence
+	m_SpecularColor = glm::vec3(m_LightColor) * m_LightIntensity;
 
 	/// Light position	// use this to rotate a point light source
 	m_LightPos.x = sin(glfwGetTime() * 2.0f);
@@ -100,6 +100,7 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 
 	/// Lamp
 	m_LampShader->Bind();
+	m_LampShader->SetFloat3("u_Color", m_LightColor * m_LightIntensity);
 	m_LampShader->SetMat4("u_Projection", projection);
 	m_LampShader->SetMat4("u_View", view);
 	m_LampVA->Bind();
@@ -145,7 +146,8 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 void NanosuitLayer::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
-	ImGui::ColorEdit4("Background Color", glm::value_ptr(m_BgColor));
+	ImGui::ColorEdit4("Light Color", glm::value_ptr(m_LightColor));
+	ImGui::SliderFloat("Light Intensity", &m_LightIntensity, 0.0f, 10.0f);
 	ImGui::End();
 }
 

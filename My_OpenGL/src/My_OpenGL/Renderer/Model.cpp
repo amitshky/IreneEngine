@@ -16,7 +16,7 @@ namespace myo {
 		LoadModel(path);
 	}
 
-	void Model::Draw(std::shared_ptr<Shader>& shader)
+	void Model::Draw(Ref<Shader>& shader)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); i++)
 			m_Meshes[i].Draw(shader);
@@ -56,7 +56,7 @@ namespace myo {
 	{
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
-		std::vector<std::shared_ptr<Texture2D>> textures;
+		std::vector<Ref<Texture2D>> textures;
 
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -108,24 +108,24 @@ namespace myo {
 
 		//process materials
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<std::shared_ptr<Texture2D>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		std::vector<Ref<Texture2D>> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-		std::vector<std::shared_ptr<Texture2D>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		std::vector<Ref<Texture2D>> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-		std::vector<std::shared_ptr<Texture2D>> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+		std::vector<Ref<Texture2D>> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
 		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-		std::vector<std::shared_ptr<Texture2D>> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+		std::vector<Ref<Texture2D>> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
 		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 		return Mesh(vertices, indices, textures);
 	}
 
-	std::vector<std::shared_ptr<Texture2D>> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName)
+	std::vector<Ref<Texture2D>> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName)
 	{
-		std::vector<std::shared_ptr<Texture2D>> textures;
+		std::vector<Ref<Texture2D>> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 		{
 			aiString str;
@@ -144,7 +144,7 @@ namespace myo {
 			}
 			if (!skip)
 			{	// if texture hasn't been loaded already, load it
-				std::shared_ptr<Texture2D> texture = std::make_shared<Texture2D>(str.C_Str(), m_Directory, typeName);
+				Ref<Texture2D> texture = CreateRef<Texture2D>(str.C_Str(), m_Directory, typeName);
 				textures.push_back(texture);
 				m_TexturesLoaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 			}

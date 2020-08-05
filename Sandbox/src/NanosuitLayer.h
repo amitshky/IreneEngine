@@ -37,5 +37,6 @@ private:
 	glm::vec3 m_AmbientColor;
 	glm::vec3 m_SpecularColor;
 
-	glm::vec4 m_BgColor = { 0.05f, 0.05f, 0.05f, 1.0f };
+	glm::vec4 m_LightColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float m_LightIntensity = 3.0f;
 };

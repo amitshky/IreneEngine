@@ -5,17 +5,17 @@
 
 namespace myo {
 
-	Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<std::shared_ptr<Texture2D>>& textures)
+	Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<Ref<Texture2D>>& textures)
 	{
-		m_VAO = std::make_shared<VertexArray>();
-		m_VBO = std::make_shared<VertexBuffer>(vertices);
-		m_EBO = std::make_shared<IndexBuffer>(indices, indices.size());
+		m_VAO = CreateRef<VertexArray>();
+		m_VBO = CreateRef<VertexBuffer>(vertices);
+		m_EBO = CreateRef<IndexBuffer>(indices, indices.size());
 		m_Textures = textures;
 
 		Init();
 	}
 
-	void Mesh::Draw(std::shared_ptr<Shader>& shader)
+	void Mesh::Draw(Ref<Shader>& shader)
 	{
 		// bind appropriate textures
 		unsigned int diffuseNr = 1;
@@ -54,7 +54,7 @@ namespace myo {
 			{ShaderDataType::Float2, "a_TexCoords"},
 			{ShaderDataType::Float3, "a_Tangent"},
 			{ShaderDataType::Float3, "a_Bitangent"}
-			});
+		});
 		m_VAO->AddVertexBuffer(m_VBO);
 		m_VAO->SetIndexBuffer(m_EBO);
 		m_VAO->Unbind();
