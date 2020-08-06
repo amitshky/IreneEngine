@@ -16,10 +16,10 @@ namespace myo {
 		LoadModel(path);
 	}
 
-	void Model::Draw(Ref<Shader>& shader)
+	void Model::Draw(Ref<Shader>& shader, const glm::mat4& model)
 	{
 		for (unsigned int i = 0; i < m_Meshes.size(); i++)
-			m_Meshes[i].Draw(shader);
+			m_Meshes[i].Draw(shader, model);
 	}
 
 	void Model::LoadModel(const std::string& path)

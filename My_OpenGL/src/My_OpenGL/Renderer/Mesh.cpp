@@ -15,7 +15,21 @@ namespace myo {
 		Init();
 	}
 
-	void Mesh::Draw(Ref<Shader>& shader)
+	void Mesh::Init()
+	{
+		m_VBO->SetLayout({
+			{ShaderDataType::Float3, "a_Position"},
+			{ShaderDataType::Float3, "a_Normal"},
+			{ShaderDataType::Float2, "a_TexCoords"},
+			{ShaderDataType::Float3, "a_Tangent"},
+			{ShaderDataType::Float3, "a_Bitangent"}
+		});
+		m_VAO->AddVertexBuffer(m_VBO);
+		m_VAO->SetIndexBuffer(m_EBO);
+		m_VAO->Unbind();
+	}
+
+	void Mesh::Draw(Ref<Shader>& shader, const glm::mat4& model)
 	{
 		// bind appropriate textures
 		unsigned int diffuseNr = 1;
@@ -42,22 +56,9 @@ namespace myo {
 
 		// draw mesh
 		m_VAO->Bind();
-		glDrawElements(GL_TRIANGLES, m_VAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, 0);
+		Renderer::Submit(shader, m_VAO, model);
+		//glDrawElements(GL_TRIANGLES, m_VAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, 0);
 		m_VAO->Unbind();
 	}
-
-	void Mesh::Init()
-	{
-		m_VBO->SetLayout({
-			{ShaderDataType::Float3, "a_Position"},
-			{ShaderDataType::Float3, "a_Normal"},
-			{ShaderDataType::Float2, "a_TexCoords"},
-			{ShaderDataType::Float3, "a_Tangent"},
-			{ShaderDataType::Float3, "a_Bitangent"}
-		});
-		m_VAO->AddVertexBuffer(m_VBO);
-		m_VAO->SetIndexBuffer(m_EBO);
-		m_VAO->Unbind();
-	}
-
+	
 }

@@ -14,7 +14,7 @@ namespace myo {
 	public:
 		Model(const std::string& path, bool gamma = false);
 		~Model() {}
-		void Draw(Ref<Shader>& shader);
+		void Draw(Ref<Shader>& shader, const glm::mat4& model);
 
 	private:
 		std::vector<Ref<Texture2D>> loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);

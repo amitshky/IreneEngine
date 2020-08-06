@@ -10,8 +10,7 @@ out vec3 Normal;
 out vec2 TexCoords;
 
 uniform mat4 u_Model;
-uniform mat4 u_View;
-uniform mat4 u_Projection;
+uniform mat4 u_ViewProjection;
 
 void main()
 {
@@ -19,7 +18,7 @@ void main()
 	Normal = mat3(transpose(inverse(u_Model))) * a_Normal; // the inverse part is very taxing on performance // it is used for non uniform scaling
 	TexCoords = a_TexCoords;
 
-	gl_Position = u_Projection * u_View * vec4(FragPos, 1.0f);
+	gl_Position = u_ViewProjection * vec4(FragPos, 1.0f);
 }
 
 #shader fragment

@@ -13,9 +13,9 @@
 #include "My_OpenGL/ImGui/ImGuiLayer.h"
 
 // ----Renderer--------------
-//#include "My_OpenGL/Renderer/Renderer.h"
-//#include "My_OpenGL/Renderer/Renderer2D.h"
-//#include "My_OpenGL/Renderer/RenderCommand.h"
+#include "My_OpenGL/Renderer/Renderer.h"
+#include "My_OpenGL/Renderer/Renderer3D.h"
+#include "My_OpenGL/Renderer/RenderCommand.h"
 
 #include "My_OpenGL/Renderer/Shader.h"
 #include "My_OpenGL/Renderer/Buffer.h"

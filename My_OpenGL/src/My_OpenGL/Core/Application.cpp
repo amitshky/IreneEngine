@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Application.h"
 
-//#include "My_OpenGL/Renderer/Renderer.h"
+#include "My_OpenGL/Renderer/Renderer.h"
 #include "Input.h"
 
 #include <GLFW/glfw3.h>
@@ -18,7 +18,7 @@ namespace myo {
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
-		//Renderer::Init();
+		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -92,7 +92,7 @@ namespace myo {
 			return false;
 		}
 		m_Minimized = false;
-		//Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 		return false;
 	}
 
