@@ -67,13 +67,13 @@ NanosuitLayer::NanosuitLayer()
 	m_LampShader->Unbind();
 
 	/// Model loading
-	m_NanosuitShader = myo::CreateRef<myo::Shader>("assets/shaders/NonosuitModel.shader");
+	m_NanosuitShader = myo::CreateRef<myo::Shader>("assets/shaders/NanosuitModel.shader");
 	m_NanosuitModel = myo::CreateRef<myo::Model>("assets/3DModels/nanosuit/nanosuit.obj");
 }
 
 void NanosuitLayer::OnUpdate(myo::Timestep ts)
 {
-	myo::RenderCommand::SetClearColor({ 0.02f, 0.02f, 0.02f, 1.0f });
+	myo::RenderCommand::SetClearColor({ 0.4f, 0.4f, 0.4f, 1.0f });
 	myo::RenderCommand::Clear();
 
 	m_CameraController.OnUpdate(ts);

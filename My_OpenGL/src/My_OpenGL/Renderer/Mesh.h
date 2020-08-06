@@ -9,12 +9,6 @@
 // Vertex struct defined in Buffer.h
 namespace myo {
 
-	struct Texture {
-		unsigned int id;
-		std::string type;
-		std::string path;
-	};
-
 	class Mesh
 	{
 	public:

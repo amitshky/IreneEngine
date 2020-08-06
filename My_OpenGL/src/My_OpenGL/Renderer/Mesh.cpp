@@ -57,7 +57,6 @@ namespace myo {
 		// draw mesh
 		m_VAO->Bind();
 		Renderer::Submit(shader, m_VAO, model);
-		//glDrawElements(GL_TRIANGLES, m_VAO->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, 0);
 		m_VAO->Unbind();
 	}
 	

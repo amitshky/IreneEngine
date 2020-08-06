@@ -27,8 +27,6 @@ namespace myo {
 		std::vector<Ref<Texture2D>> m_TexturesLoaded;
 		std::string m_Directory;
 		bool m_GammaCorrection;
-
-		std::vector<Texture> m_TexturesLoaded2;
 	};
 
 }

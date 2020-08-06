@@ -18,7 +18,7 @@ namespace myo {
 
 	void Model::Draw(Ref<Shader>& shader, const glm::mat4& model)
 	{
-		for (unsigned int i = 0; i < m_Meshes.size(); i++)
+		for (uint32_t i = 0; i < m_Meshes.size(); i++)
 			m_Meshes[i].Draw(shader, model);
 	}
 
@@ -41,12 +41,12 @@ namespace myo {
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene)
 	{
-		for (unsigned int i = 0; i < node->mNumMeshes; i++)
+		for (uint32_t i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			m_Meshes.push_back(ProcessMesh(mesh, scene));
 		}
-		for (unsigned int i = 0; i < node->mNumChildren; i++)
+		for (uint32_t i = 0; i < node->mNumChildren; i++)
 		{
 			ProcessNode(node->mChildren[i], scene);
 		}
@@ -58,7 +58,7 @@ namespace myo {
 		std::vector<uint32_t> indices;
 		std::vector<Ref<Texture2D>> textures;
 
-		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+		for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 		{
 			Vertex vertex;
 			glm::vec3 vector;
@@ -98,11 +98,11 @@ namespace myo {
 			vertices.push_back(vertex);
 		}
 		// process indices
-		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		for (uint32_t i = 0; i < mesh->mNumFaces; i++)
 		{
 			aiFace face = mesh->mFaces[i];
 			// retrieve all indices of the face and store them in the indices vector
-			for (unsigned int j = 0; j < face.mNumIndices; j++)
+			for (uint32_t j = 0; j < face.mNumIndices; j++)
 				indices.push_back(face.mIndices[j]);
 		}
 
@@ -126,14 +126,14 @@ namespace myo {
 	std::vector<Ref<Texture2D>> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName)
 	{
 		std::vector<Ref<Texture2D>> textures;
-		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+		for (uint32_t i = 0; i < mat->GetTextureCount(type); i++)
 		{
 			aiString str;
 			mat->GetTexture(type, i, &str);
 
 			// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			bool skip = false;
-			for (unsigned int j = 0; j < m_TexturesLoaded.size(); j++)
+			for (uint32_t j = 0; j < m_TexturesLoaded.size(); j++)
 			{
 				if (std::strcmp(m_TexturesLoaded[j]->GetPath().data(), str.C_Str()) == 0)
 				{
