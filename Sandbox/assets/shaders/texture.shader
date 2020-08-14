@@ -2,20 +2,23 @@
 #version 330 core
 
 layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
-layout(location = 2) in vec2 a_TexCoord;
+layout(location = 1) in vec3 a_Normal;
+layout(location = 2) in vec2 a_TexCoords;
 
 uniform mat4 u_ViewProjection;
-uniform mat4 u_Transform;
+uniform mat4 u_Model;
 
-out vec4 v_Color;
-out vec2 v_TexCoord;
+out vec3 FragPos;
+out vec3 Normal;
+out vec2 TexCoords;
 
 void main()
 {
-	v_Color = a_Color;
-	v_TexCoord = a_TexCoord;
-	gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0f);
+	FragPos = vec3(u_Model * vec4(a_Position, 1.0f));
+	Normal = mat3(transpose(inverse(u_Model))) * a_Normal; // the inverse part is very taxing on performance // it is used for non uniform scaling
+	TexCoords = a_TexCoords;
+
+	gl_Position = u_ViewProjection * vec4(FragPos, 1.0f);
 }
 
 
@@ -24,16 +27,12 @@ void main()
 
 out vec4 Color;
 
-in vec4 v_Color;
-in vec2 v_TexCoord;
+in vec2 TexCoords;
 
-uniform sampler2D u_ContainerTexture;
-//uniform sampler2D u_SmilieTexture;
+uniform sampler2D u_Texture;
 
 void main()
 {
-	//Color = mix(texture(u_ContainerTexture, v_TexCoord), texture(u_SmilieTexture, v_TexCoord), 0.2f) * v_Color;
-	Color = texture(u_ContainerTexture, v_TexCoord) * v_Color;
-					// 0.2f = 80% of first texture and 20% of second texture
-	//Color = vec4(v_TexCoord, 0.0f, 1.0f);
+	vec4 texColor = texture(u_Texture, TexCoords);
+	Color = texColor;
 }

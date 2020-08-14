@@ -16,6 +16,7 @@ namespace myo {
 		inline uint32_t GetHeight() const { return m_Height; }
 		inline std::string GetType() const { return m_Type; }
 		inline std::string GetPath() const { return m_Path; }
+		inline uint32_t GetRendererID() const { return m_RendererID; } // remove this later
 
 		void SetData(void* data, uint32_t size);
 		void Bind(uint32_t slot = 0) const;
