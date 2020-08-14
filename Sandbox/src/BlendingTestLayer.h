@@ -26,7 +26,6 @@ private:
 	myo::Ref<myo::Shader> m_CubeShader;
 
 	myo::Ref<myo::Texture2D> m_DiffuseMap;
-	myo::Ref<myo::Texture2D> m_SpecularMap;
 
 	/// Transparent plane
 	std::vector<glm::vec3> m_TransparentPlanePosition;
@@ -36,4 +35,5 @@ private:
 	myo::Ref<myo::Shader> m_TransparentShader;
 
 	myo::Ref<myo::Texture2D> m_TransparentTexture;
+
 };

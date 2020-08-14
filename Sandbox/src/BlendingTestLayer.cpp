@@ -115,7 +115,7 @@ void BlendingTestLayer::OnUpdate(myo::Timestep ts)
 
 	m_CameraController.OnUpdate(ts);
 	myo::Renderer::BeginScene(m_CameraController.GetCamera());
-
+	
 	glm::mat4 model;
 
 	m_CubeShader->Bind();
