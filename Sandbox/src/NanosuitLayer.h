@@ -13,20 +13,17 @@ public:
 	NanosuitLayer();
 	virtual ~NanosuitLayer() = default;
 
-	void OnUpdate(myo::Timestep ts) override;
+	virtual void OnAttach() override;
+	virtual void OnUpdate(myo::Timestep ts) override;
 	virtual void OnImGuiRender() override;
-	void OnEvent(myo::Event& e) override;
+	virtual void OnEvent(myo::Event& e) override;
 
 private:
 	myo::CameraController m_CameraController;
 
 	/// Spot Light properties
-	float m_InnerCutOff = glm::radians(12.5f);
-	float m_OuterCutOff = glm::radians(20.0f);
-
-	myo::Ref<myo::VertexArray> m_LampVA;
-	myo::Ref<myo::VertexBuffer> m_LampVBO;
-	myo::Ref<myo::Shader> m_LampShader;
+	//float m_InnerCutOff = glm::radians(12.5f);
+	//float m_OuterCutOff = glm::radians(20.0f);
 
 	myo::Ref<myo::Shader> m_NanosuitShader;
 	myo::Ref<myo::Model> m_NanosuitModel;

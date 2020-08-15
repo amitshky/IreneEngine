@@ -24,14 +24,7 @@ private:
 	myo::Ref<myo::Shader> m_Shader;
 	myo::Ref<myo::Shader> m_ScreenShader;
 
-	/// Cube
-	myo::Ref<myo::VertexArray> m_CubeVA;
-	myo::Ref<myo::VertexBuffer> m_CubeVB;
 	myo::Ref<myo::Texture2D> m_CubeTexture;
-
-	/// Transparent plane
-	myo::Ref<myo::VertexArray> m_PlaneVA;
-	myo::Ref<myo::VertexBuffer> m_PlaneVB;
 	myo::Ref<myo::Texture2D> m_PlaneTexture;
 
 	/// Framebuffer

@@ -30,9 +30,10 @@ out vec4 Color;
 in vec2 TexCoords;
 
 uniform sampler2D u_Texture;
+uniform float u_Tile;
 
 void main()
 {
-	vec4 texColor = texture(u_Texture, TexCoords);
+	vec4 texColor = texture(u_Texture, TexCoords * u_Tile);
 	Color = texColor;
 }

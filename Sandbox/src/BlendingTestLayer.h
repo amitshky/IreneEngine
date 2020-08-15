@@ -13,27 +13,19 @@ public:
 	BlendingTestLayer();
 	virtual ~BlendingTestLayer();
 
-	void OnUpdate(myo::Timestep ts);
-	virtual void OnImGuiRender();
-	void OnEvent(myo::Event& e);
+	virtual void OnAttach() override;
+	virtual void OnUpdate(myo::Timestep ts) override;
+	virtual void OnImGuiRender() override;
+	virtual void OnEvent(myo::Event& e) override;
 
 private:
 	myo::CameraController m_CameraController;
 
 	/// Cube
-	myo::Ref<myo::VertexArray> m_CubeVA;
-	myo::Ref<myo::VertexBuffer> m_CubeVB;
-	myo::Ref<myo::Shader> m_CubeShader;
-
 	myo::Ref<myo::Texture2D> m_DiffuseMap;
 
 	/// Transparent plane
 	std::vector<glm::vec3> m_TransparentPlanePosition;
-
-	myo::Ref<myo::VertexArray> m_TransparentVA;
-	myo::Ref<myo::VertexBuffer> m_TransparentVB;
-	myo::Ref<myo::Shader> m_TransparentShader;
-
 	myo::Ref<myo::Texture2D> m_TransparentTexture;
 
 };
