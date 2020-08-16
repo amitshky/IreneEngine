@@ -24,7 +24,7 @@ private:
 	myo::Ref<myo::Texture2D> m_DiffuseMap;
 	myo::Ref<myo::Texture2D> m_SpecularMap;
 
-	/// Light properties
+	// Light properties
 	glm::vec3 m_LightPos = glm::vec3(1.0f, 1.0f, 1.5f);
 	glm::vec3 m_DiffuseColor = glm::vec3(0.0f);
 	glm::vec3 m_AmbientColor = glm::vec3(0.0f);

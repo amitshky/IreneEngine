@@ -26,7 +26,7 @@ void CubeLayer::OnUpdate(myo::Timestep ts)
 	m_LightPos.y = sin(glfwGetTime());
 	m_LightPos.z = cos(glfwGetTime() * 2.0f);
 
-	/// Phong Lighting components
+	// Phong Lighting components
 	m_DiffuseColor = glm::vec3(m_LightColor) * m_LightIntensity; // decrease the influence
 	m_AmbientColor = m_DiffuseColor * glm::vec3(0.1f); // low influence
 	m_SpecularColor = glm::vec3(m_LightColor) * m_LightIntensity;
@@ -38,6 +38,7 @@ void CubeLayer::OnUpdate(myo::Timestep ts)
 	myo::Renderer3D::DrawCubeWithLighting(m_DiffuseMap, m_SpecularMap, lightData, { 0.0f, 0.0f, 0.0f }, glm::vec3(1.0f)); // Cube with lighting
 	myo::Renderer3D::DrawTexturedCube(m_DiffuseMap, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));	// cube with only texture
 	myo::Renderer3D::DrawColoredCube(m_LightColor * m_LightIntensity, m_LightPos, glm::vec3(0.2f));	// lamp
+
 	myo::Renderer3D::EndScene();
 }
 

@@ -5,8 +5,8 @@ layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec3 a_Normal;
 layout(location = 2) in vec2 a_TexCoords;
 
-uniform mat4 u_ViewProjection;
 uniform mat4 u_Model;
+uniform mat4 u_ViewProjection;
 
 out vec3 FragPos;
 out vec3 Normal;
@@ -31,9 +31,9 @@ in vec2 TexCoords;
 
 uniform sampler2D u_Texture;
 uniform float u_Tile;
+uniform vec4 u_Color;
 
 void main()
 {
-	vec4 texColor = texture(u_Texture, TexCoords * u_Tile);
-	Color = texColor;
+	Color = texture(u_Texture, TexCoords * u_Tile) * u_Color;
 }

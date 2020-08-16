@@ -27,7 +27,7 @@ private:
 	myo::Ref<myo::Texture2D> m_CubeTexture;
 	myo::Ref<myo::Texture2D> m_PlaneTexture;
 
-	/// Framebuffer
+	// Framebuffer
 	myo::Ref<myo::Framebuffer> m_Framebuffer;
 	myo::Ref<myo::VertexArray> m_QuadVA;	// to fill the entire viewport
 	myo::Ref<myo::VertexBuffer> m_QuadVB;

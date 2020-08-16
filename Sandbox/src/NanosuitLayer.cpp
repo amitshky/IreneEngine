@@ -5,7 +5,7 @@
 NanosuitLayer::NanosuitLayer()
 	: Layer("Nanosuit"), m_CameraController(16.0f / 9.0f)
 {
-	/// Model loading
+	// Model loading
 	m_NanosuitShader = myo::CreateRef<myo::Shader>("assets/shaders/NanosuitModel.shader");
 	m_NanosuitModel = myo::CreateRef<myo::Model>("assets/3DModels/nanosuit/nanosuit.obj");
 }
@@ -22,7 +22,7 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 	m_CameraController.OnUpdate(ts);
 	myo::Renderer::BeginScene(m_CameraController.GetCamera());
 
-	/// Nanosuit model
+	// Nanosuit model
 	m_NanosuitShader->Bind();
 	m_NanosuitShader->SetFloat3("u_ViewPos", m_CameraController.GetCamera().GetPosition());
 
@@ -49,19 +49,18 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 
 	myo::Renderer::EndScene();
 
-
-	/// Phong Lighting components
+	// Phong Lighting components
 	m_DiffuseColor = glm::vec3(m_LightColor) * m_LightIntensity; // decrease the influence
 	m_AmbientColor = m_DiffuseColor * glm::vec3(0.1f); // low influence
 	m_SpecularColor = glm::vec3(m_LightColor) * m_LightIntensity;
 
-	/// Light position	// use this to rotate a point light source
+	// Light position	// use this to rotate a point light source
 	m_LightPos.x = sin(glfwGetTime() * 2.0f);
 	m_LightPos.y = sin(glfwGetTime());
 	m_LightPos.z = cos(glfwGetTime() * 2.0f);
 
 	myo::Renderer3D::BeginScene(m_CameraController.GetCamera());
-	/// Lamp
+	// Lamp
 	myo::Renderer3D::DrawColoredCube(m_LightColor * m_LightIntensity, m_LightPos, glm::vec3(0.2f));
 	myo::Renderer3D::EndScene();
 }

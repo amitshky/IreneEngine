@@ -22,7 +22,7 @@ FramebufferLayer::FramebufferLayer()
 	m_CubeTexture = myo::CreateRef<myo::Texture2D>("assets/textures/container.jpg");
 	m_PlaneTexture = myo::CreateRef<myo::Texture2D>("assets/textures/wall.jpg");
 
-	/// Quad
+	// Quad
 	m_QuadVA = myo::CreateRef<myo::VertexArray>();
 	m_QuadVB = myo::CreateRef<myo::VertexBuffer>(quadVertices, sizeof(quadVertices));
 	m_QuadVB->SetLayout({
@@ -66,7 +66,7 @@ void FramebufferLayer::OnUpdate(myo::Timestep ts)
 	m_Framebuffer->Unbind();
 	glDisable(GL_DEPTH_TEST);
 
-	myo::RenderCommand::SetClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+	myo::RenderCommand::SetClearColor({ 1.0f, 0.0f, 1.0f, 1.0f });
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_ScreenShader->Bind();
@@ -83,5 +83,9 @@ void FramebufferLayer::OnImGuiRender()
 
 void FramebufferLayer::OnEvent(myo::Event& e)
 {
+	myo::WindowResizeEvent* resizeEvent = dynamic_cast<myo::WindowResizeEvent*>(&e);
+	if (resizeEvent)
+		m_Framebuffer->Resize(resizeEvent->GetWidth(), resizeEvent->GetHeight());
+
 	m_CameraController.OnEvent(e);
 }

@@ -21,10 +21,10 @@ public:
 private:
 	myo::CameraController m_CameraController;
 
-	/// Cube
+	// Cube
 	myo::Ref<myo::Texture2D> m_DiffuseMap;
 
-	/// Transparent plane
+	// Transparent plane
 	std::vector<glm::vec3> m_TransparentPlanePosition;
 	myo::Ref<myo::Texture2D> m_TransparentTexture;
 

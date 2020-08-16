@@ -18,7 +18,8 @@ namespace myo {
 		Ref<VertexArray> PlaneVertexArray;
 		Ref<VertexBuffer> PlaneVertexBuffer;
 
-		Ref<Shader> ColorShader;
+		Ref<Texture2D> WhiteTexture;
+
 		Ref<Shader> TextureShader;
 		Ref<Shader> LightingShader;
 	};
@@ -82,7 +83,7 @@ namespace myo {
 			-0.5f, -0.5f,  0.0f,	 0.0f,  0.0f,  1.0f,	 0.0f,  0.0f,
 		};
 
-		/// Cube
+		// Cube
 		s_Data.CubeVertexArray = CreateRef<VertexArray>();
 		s_Data.CubeVertexBuffer = CreateRef<VertexBuffer>(cubeVertices, sizeof(cubeVertices));
 		s_Data.CubeVertexBuffer->SetLayout({
@@ -94,7 +95,7 @@ namespace myo {
 		s_Data.CubeVertexBuffer->Unbind();
 		s_Data.CubeVertexArray->Unbind();
 
-		/// Plane
+		// Plane
 		s_Data.PlaneVertexArray = CreateRef<VertexArray>();
 		s_Data.PlaneVertexBuffer = CreateRef<VertexBuffer>(planeVertices, sizeof(planeVertices));
 		s_Data.PlaneVertexBuffer->SetLayout({
@@ -106,8 +107,12 @@ namespace myo {
 		s_Data.PlaneVertexBuffer->Unbind();
 		s_Data.PlaneVertexArray->Unbind();
 
-		/// Shaders
-		s_Data.ColorShader = CreateRef<Shader>("assets/shaders/Color.shader");
+		// White texture
+		s_Data.WhiteTexture = CreateRef<Texture2D>(1, 1);		// creates a 1x1 white texture
+		uint32_t whiteTextureData = 0xffffffff;
+		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+
+		// Shaders
 		s_Data.TextureShader = CreateRef<Shader>("assets/shaders/texture.shader");
 		s_Data.LightingShader = CreateRef<Shader>("assets/shaders/BasicLighting.shader");
 
@@ -118,7 +123,6 @@ namespace myo {
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetInt("u_Texture", 0);
 
-		s_Data.ColorShader->Unbind();
 		s_Data.LightingShader->Unbind();
 		s_Data.TextureShader->Unbind();
 	}
@@ -135,35 +139,38 @@ namespace myo {
 		
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-		
-		s_Data.ColorShader->Bind();
-		s_Data.ColorShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer3D::EndScene()
 	{
 	}
 
-	void Renderer3D::DrawColoredPlane(const glm::vec3& color, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
+	void Renderer3D::DrawColoredPlane(const glm::vec4& color, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
 	{
-		s_Data.ColorShader->Bind();
+		const float textureTile = 1.0f;
+
+		s_Data.TextureShader->Bind();
 		s_Data.PlaneVertexArray->Bind();
+		s_Data.WhiteTexture->Bind();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
 			* glm::scale(glm::mat4(1.0f), scale);
 
-		s_Data.ColorShader->SetMat4("u_Model", model);
-		s_Data.ColorShader->SetFloat3("u_Color", color);
+		s_Data.TextureShader->SetMat4("u_Model", model);
+		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
+		s_Data.TextureShader->SetFloat4("u_Color", color);
 		
-		RenderCommand::Draw(36);
+		RenderCommand::Draw(6);
 		s_Data.PlaneVertexArray->Unbind();
-		s_Data.ColorShader->Unbind();
+		s_Data.TextureShader->Unbind();
 	}
 
 	void Renderer3D::DrawTexturedPlane(const Ref<Texture2D>& texture, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, 
 		const glm::vec3& scale, float textureTile)
 	{
+		const glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 		s_Data.TextureShader->Bind();
 		s_Data.PlaneVertexArray->Bind();
 		texture->Bind();
@@ -174,22 +181,58 @@ namespace myo {
 
 		s_Data.TextureShader->SetMat4("u_Model", model);
 		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
+		s_Data.TextureShader->SetFloat4("u_Color", color);
 
-		RenderCommand::Draw(36);
+		RenderCommand::Draw(6);
 		s_Data.PlaneVertexArray->Unbind();
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawColoredCube(const glm::vec3& color, const glm::vec3& position, const glm::vec3& scale)
+	void Renderer3D::DrawPlaneWithLighting(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
+		const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
 	{
-		s_Data.ColorShader->Bind();
+		s_Data.LightingShader->Bind();
+		s_Data.PlaneVertexArray->Bind();
+
+		diffuseTex->Bind();
+		specularTex->Bind(1);
+
+		s_Data.LightingShader->SetFloat3("u_Light.position", lightData.LightPos);
+		s_Data.LightingShader->SetFloat3("u_Light.ambient", lightData.AmbientColor);
+		s_Data.LightingShader->SetFloat3("u_Light.diffuse", lightData.DiffuseColor);
+		s_Data.LightingShader->SetFloat3("u_Light.specular", lightData.SpecularColor);
+		s_Data.LightingShader->SetFloat("u_Light.constant", lightData.ConstantAttenuation);
+		s_Data.LightingShader->SetFloat("u_Light.linear", lightData.LinearAttenuation);
+		s_Data.LightingShader->SetFloat("u_Light.quadratic", lightData.QuadraticAttenuation);
+
+		s_Data.LightingShader->SetFloat("u_Material.shininess", 64.0f);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
+			* glm::scale(glm::mat4(1.0f), scale);
+		s_Data.LightingShader->SetMat4("u_Model", model);
+
+		RenderCommand::Draw(6);
+		s_Data.PlaneVertexArray->Unbind();
+		s_Data.LightingShader->Unbind();
+	}
+
+
+	void Renderer3D::DrawColoredCube(const glm::vec4& color, const glm::vec3& position, const glm::vec3& scale)
+	{
+		const float textureTile = 1.0f;
+
+		s_Data.TextureShader->Bind();
 		s_Data.CubeVertexArray->Bind();
+		s_Data.WhiteTexture->Bind();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(glm::mat4(1.0f), position)
 			* glm::scale(glm::mat4(1.0f), scale);
 
-		s_Data.ColorShader->SetMat4("u_Model", model);
-		s_Data.ColorShader->SetFloat3("u_Color", color);
+		s_Data.TextureShader->SetMat4("u_Model", model);
+		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
+		s_Data.TextureShader->SetFloat4("u_Color", color);
 
 		RenderCommand::Draw(36);
 		s_Data.CubeVertexArray->Unbind();
@@ -198,6 +241,8 @@ namespace myo {
 
 	void Renderer3D::DrawTexturedCube(const Ref<Texture2D>& texture, const glm::vec3& position, const glm::vec3& scale, float textureTile)
 	{
+		const glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 		s_Data.TextureShader->Bind();
 		s_Data.CubeVertexArray->Bind();
 		texture->Bind();
@@ -207,6 +252,7 @@ namespace myo {
 
 		s_Data.TextureShader->SetMat4("u_Model", model);
 		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
+		s_Data.TextureShader->SetFloat4("u_Color", color);
 
 		RenderCommand::Draw(36);
 		s_Data.CubeVertexArray->Unbind();

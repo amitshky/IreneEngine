@@ -32,20 +32,24 @@ namespace myo {
 		static void BeginScene(const Camera& camera);
 		static void EndScene();
 
-		static void DrawColoredPlane(const glm::vec3& color, const glm::vec3& position = glm::vec3(0.0f), float rotation = 0.0f,
-			const glm::vec3& rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f), const glm::vec3& scale = glm::vec3(1.0f));
+		// Plane
+		static void DrawColoredPlane(const glm::vec4& color, const glm::vec3& position, float rotation, 
+			const glm::vec3& rotationAxis, const glm::vec3& scale);
 
-		static void DrawTexturedPlane(const Ref<Texture2D>& texture, const glm::vec3& position = glm::vec3(0.0f), float rotation = 0.0f, 
-			const glm::vec3& rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f), const glm::vec3& scale = glm::vec3(1.0f), float textureTile = 1.0f);
+		static void DrawTexturedPlane(const Ref<Texture2D>& texture, const glm::vec3& position, float rotation, 
+			const glm::vec3& rotationAxis, const glm::vec3& scale, float textureTile = 1.0f);
 
-		static void DrawColoredCube(const glm::vec3& color, const glm::vec3& position = glm::vec3(0.0f),
-			const glm::vec3& scale = glm::vec3(1.0f));
+		static void DrawPlaneWithLighting(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
+			const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale);
 
-		static void DrawTexturedCube(const Ref<Texture2D>& texture, const glm::vec3& position = glm::vec3(0.0f), 
-			const glm::vec3& scale = glm::vec3(1.0f), float textureTile = 1.0f);
+
+		// Cube
+		static void DrawColoredCube(const glm::vec4& color, const glm::vec3& position, const glm::vec3& scale);
+
+		static void DrawTexturedCube(const Ref<Texture2D>& texture, const glm::vec3& position, const glm::vec3& scale, float textureTile = 1.0f);
 
 		static void DrawCubeWithLighting(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData, 
-			const glm::vec3& position = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f));
+			const glm::vec3& position, const glm::vec3& scale);
 	};
 
 }

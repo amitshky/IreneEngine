@@ -72,11 +72,8 @@ namespace myo {
 
 	bool CameraController::OnWindowResized(WindowResizeEvent& e)
 	{
-		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		if (e.GetWidth() == 0 && e.GetHeight() == 0)
-			m_Camera.SetProjection(m_ZoomLevel, 0);
-		else
-			m_Camera.SetProjection(m_ZoomLevel, m_AspectRatio);
+		m_AspectRatio = e.GetWidth() && e.GetHeight() ? (float)e.GetWidth() / (float)e.GetHeight() : 0;
+		m_Camera.SetProjection(m_ZoomLevel, m_AspectRatio);
 		return false;
 	}
 

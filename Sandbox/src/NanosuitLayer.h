@@ -21,14 +21,14 @@ public:
 private:
 	myo::CameraController m_CameraController;
 
-	/// Spot Light properties
+	// Spot Light properties
 	//float m_InnerCutOff = glm::radians(12.5f);
 	//float m_OuterCutOff = glm::radians(20.0f);
 
 	myo::Ref<myo::Shader> m_NanosuitShader;
 	myo::Ref<myo::Model> m_NanosuitModel;
 
-	/// Light properties
+	// Light properties
 	glm::vec3 m_LightPos = glm::vec3(1.0f, 1.0f, 1.5f);
 	glm::vec3 m_DiffuseColor;
 	glm::vec3 m_AmbientColor;
