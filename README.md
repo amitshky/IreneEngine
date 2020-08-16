@@ -1,4 +1,4 @@
-# My_OpenGL
+# Irene
 Run Win-GenerateProjects.bat file to generate VS project files.\
-Copy ```My_OpenGL\vendor\assimp\lib\assimp-vc142-mtd.dll``` to same folder as the executable
+Copy ```Irene\vendor\assimp\lib\assimp-vc142-mtd.dll``` to same folder as the executable
 
