@@ -1,28 +1,28 @@
 #pragma once
 
-#include <My_OpenGL.h>
+#include <Irene.h>
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class CubeLayer : public myo::Layer
+class CubeLayer : public irene::Layer
 {
 public:
 	CubeLayer();
 	virtual ~CubeLayer();
 
 	virtual void OnAttach() override;
-	virtual void OnUpdate(myo::Timestep ts) override;
+	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual void OnImGuiRender() override;
-	virtual void OnEvent(myo::Event& e) override;
+	virtual void OnEvent(irene::Event& e) override;
 
 private:
-	myo::CameraController m_CameraController;
+	irene::CameraController m_CameraController;
 
-	myo::Ref<myo::Texture2D> m_DiffuseMap;
-	myo::Ref<myo::Texture2D> m_SpecularMap;
+	irene::Ref<irene::Texture2D> m_DiffuseMap;
+	irene::Ref<irene::Texture2D> m_SpecularMap;
 
 	// Light properties
 	glm::vec3 m_LightPos = glm::vec3(1.0f, 1.0f, 1.5f);

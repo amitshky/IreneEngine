@@ -1,4 +1,4 @@
-workspace "My_OpenGL"
+workspace "Irene"
 	
 	architecture "x64"
 	startproject "Sandbox"
@@ -19,22 +19,22 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 --Include directives relative to the root folder (solution directory)
 IncludeDir = {}
-IncludeDir["GLFW"] = "My_OpenGL/vendor/GLFW/include"
-IncludeDir["Glad"] = "My_OpenGL/vendor/Glad/include"
-IncludeDir["ImGui"] = "My_OpenGL/vendor/imgui"
-IncludeDir["glm"] = "My_OpenGL/vendor/glm"
-IncludeDir["stb_image"] = "My_OpenGL/vendor/stb_image"
-IncludeDir["assimp"] = "My_OpenGL/vendor/assimp/include"
+IncludeDir["GLFW"] = "Irene/vendor/GLFW/include"
+IncludeDir["Glad"] = "Irene/vendor/Glad/include"
+IncludeDir["ImGui"] = "Irene/vendor/imgui"
+IncludeDir["glm"] = "Irene/vendor/glm"
+IncludeDir["stb_image"] = "Irene/vendor/stb_image"
+IncludeDir["assimp"] = "Irene/vendor/assimp/include"
 
 group "Dependencies"
-	include "My_OpenGL/vendor/GLFW"
-	include "My_OpenGL/vendor/Glad"
-	include "My_OpenGL/vendor/imgui"
+	include "Irene/vendor/GLFW"
+	include "Irene/vendor/Glad"
+	include "Irene/vendor/imgui"
 
 group ""
 
-project "My_OpenGL"
-	location "My_OpenGL"
+project "Irene"
+	location "Irene"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
@@ -44,7 +44,7 @@ project "My_OpenGL"
 	objdir("bin-int/" ..outputdir.. "/%{prj.name}")
 
 	pchheader "pch.h"
-	pchsource "My_OpenGL/src/pch.cpp"
+	pchsource "Irene/src/pch.cpp"
 
 	files
 	{
@@ -63,7 +63,7 @@ project "My_OpenGL"
 
 	libdirs
 	{
-		"$(SolutionDir)My_OpenGL/vendor/assimp/lib"
+		"$(SolutionDir)Irene/vendor/assimp/lib"
 	}
 
 	includedirs
@@ -133,18 +133,18 @@ project "Sandbox"
 
 	includedirs
 	{
-		"My_OpenGL/src",
-		"My_OpenGL/vendor/spdlog/include",
+		"Irene/src",
+		"Irene/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.assimp}",
-		"My_OpenGL/vendor",
+		"Irene/vendor",
 		"%{IncludeDir.glm}"
 	}
 
 	links
 	{
-		"My_OpenGL"
+		"Irene"
 	}
 
 	filter "system:windows"

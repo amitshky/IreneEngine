@@ -1,31 +1,31 @@
 #pragma once
 
-#include <My_OpenGL.h>
+#include <Irene.h>
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class BlendingTestLayer : public myo::Layer
+class BlendingTestLayer : public irene::Layer
 {
 public:
 	BlendingTestLayer();
 	virtual ~BlendingTestLayer();
 
 	virtual void OnAttach() override;
-	virtual void OnUpdate(myo::Timestep ts) override;
+	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual void OnImGuiRender() override;
-	virtual void OnEvent(myo::Event& e) override;
+	virtual void OnEvent(irene::Event& e) override;
 
 private:
-	myo::CameraController m_CameraController;
+	irene::CameraController m_CameraController;
 
 	// Cube
-	myo::Ref<myo::Texture2D> m_DiffuseMap;
+	irene::Ref<irene::Texture2D> m_DiffuseMap;
 
 	// Transparent plane
 	std::vector<glm::vec3> m_TransparentPlanePosition;
-	myo::Ref<myo::Texture2D> m_TransparentTexture;
+	irene::Ref<irene::Texture2D> m_TransparentTexture;
 
 };

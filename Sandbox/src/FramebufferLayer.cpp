@@ -17,17 +17,17 @@ FramebufferLayer::FramebufferLayer()
 		 1.0f,  1.0f,	1.0f, 1.0f
 	};
 
-	m_ScreenShader = myo::CreateRef<myo::Shader>("assets/shaders/FramebufferScreen.shader");
+	m_ScreenShader = irene::CreateRef<irene::Shader>("assets/shaders/FramebufferScreen.shader");
 
-	m_CubeTexture = myo::CreateRef<myo::Texture2D>("assets/textures/container.jpg");
-	m_PlaneTexture = myo::CreateRef<myo::Texture2D>("assets/textures/wall.jpg");
+	m_CubeTexture = irene::CreateRef<irene::Texture2D>("assets/textures/container.jpg");
+	m_PlaneTexture = irene::CreateRef<irene::Texture2D>("assets/textures/wall.jpg");
 
 	// Quad
-	m_QuadVA = myo::CreateRef<myo::VertexArray>();
-	m_QuadVB = myo::CreateRef<myo::VertexBuffer>(quadVertices, sizeof(quadVertices));
+	m_QuadVA = irene::CreateRef<irene::VertexArray>();
+	m_QuadVB = irene::CreateRef<irene::VertexBuffer>(quadVertices, sizeof(quadVertices));
 	m_QuadVB->SetLayout({
-		{myo::ShaderDataType::Float2, "a_Position"},
-		{myo::ShaderDataType::Float2, "a_TexCoords"}
+		{irene::ShaderDataType::Float2, "a_Position"},
+		{irene::ShaderDataType::Float2, "a_TexCoords"}
 	});
 	m_QuadVA->AddVertexBuffer(m_QuadVB);
 	m_QuadVB->Unbind();
@@ -42,31 +42,31 @@ FramebufferLayer::~FramebufferLayer()
 
 void FramebufferLayer::OnAttach()
 {
-	myo::FramebufferSpecification fbSpec;
+	irene::FramebufferSpecification fbSpec;
 	fbSpec.Width = 1280;
 	fbSpec.Height = 720;
 
-	m_Framebuffer = myo::CreateRef<myo::Framebuffer>(fbSpec);
+	m_Framebuffer = irene::CreateRef<irene::Framebuffer>(fbSpec);
 }
 
-void FramebufferLayer::OnUpdate(myo::Timestep ts)
+void FramebufferLayer::OnUpdate(irene::Timestep ts)
 {
 	m_Framebuffer->Bind();
 	glEnable(GL_DEPTH_TEST);
-	myo::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	myo::RenderCommand::Clear();
+	irene::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+	irene::RenderCommand::Clear();
 
 	m_CameraController.OnUpdate(ts);
-	myo::Renderer3D::BeginScene(m_CameraController.GetCamera());
+	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
 
-	myo::Renderer3D::DrawTexturedCube(m_CubeTexture, { -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f));
-	myo::Renderer3D::DrawTexturedCube(m_CubeTexture, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));
-	myo::Renderer3D::DrawTexturedPlane(m_PlaneTexture, { 0.0f, -0.5001f, 0.0f }, 1.5708f, { 1.0f, 0.0f, 0.0f }, glm::vec3(8.0f), 2.0f);
+	irene::Renderer3D::DrawTexturedCube(m_CubeTexture, { -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f));
+	irene::Renderer3D::DrawTexturedCube(m_CubeTexture, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));
+	irene::Renderer3D::DrawTexturedPlane(m_PlaneTexture, { 0.0f, -0.5001f, 0.0f }, 1.5708f, { 1.0f, 0.0f, 0.0f }, glm::vec3(8.0f), 2.0f);
 
 	m_Framebuffer->Unbind();
 	glDisable(GL_DEPTH_TEST);
 
-	myo::RenderCommand::SetClearColor({ 1.0f, 0.0f, 1.0f, 1.0f });
+	irene::RenderCommand::SetClearColor({ 1.0f, 0.0f, 1.0f, 1.0f });
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_ScreenShader->Bind();
@@ -74,16 +74,16 @@ void FramebufferLayer::OnUpdate(myo::Timestep ts)
 	glBindTexture(GL_TEXTURE_2D, m_Framebuffer->GetColorAttachmentRendererID());
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	myo::Renderer3D::EndScene();
+	irene::Renderer3D::EndScene();
 }
 
 void FramebufferLayer::OnImGuiRender()
 {
 }
 
-void FramebufferLayer::OnEvent(myo::Event& e)
+void FramebufferLayer::OnEvent(irene::Event& e)
 {
-	myo::WindowResizeEvent* resizeEvent = dynamic_cast<myo::WindowResizeEvent*>(&e);
+	irene::WindowResizeEvent* resizeEvent = dynamic_cast<irene::WindowResizeEvent*>(&e);
 	if (resizeEvent)
 		m_Framebuffer->Resize(resizeEvent->GetWidth(), resizeEvent->GetHeight());
 

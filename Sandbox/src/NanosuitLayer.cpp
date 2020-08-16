@@ -6,21 +6,21 @@ NanosuitLayer::NanosuitLayer()
 	: Layer("Nanosuit"), m_CameraController(16.0f / 9.0f)
 {
 	// Model loading
-	m_NanosuitShader = myo::CreateRef<myo::Shader>("assets/shaders/NanosuitModel.shader");
-	m_NanosuitModel = myo::CreateRef<myo::Model>("assets/3DModels/nanosuit/nanosuit.obj");
+	m_NanosuitShader = irene::CreateRef<irene::Shader>("assets/shaders/NanosuitModel.shader");
+	m_NanosuitModel = irene::CreateRef<irene::Model>("assets/3DModels/nanosuit/nanosuit.obj");
 }
 
 void NanosuitLayer::OnAttach()
 {
 }
 
-void NanosuitLayer::OnUpdate(myo::Timestep ts)
+void NanosuitLayer::OnUpdate(irene::Timestep ts)
 {
-	myo::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	myo::RenderCommand::Clear();
+	irene::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+	irene::RenderCommand::Clear();
 
 	m_CameraController.OnUpdate(ts);
-	myo::Renderer::BeginScene(m_CameraController.GetCamera());
+	irene::Renderer::BeginScene(m_CameraController.GetCamera());
 
 	// Nanosuit model
 	m_NanosuitShader->Bind();
@@ -47,7 +47,7 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 	m_NanosuitModel->Draw(m_NanosuitShader, model);
 	m_NanosuitShader->Unbind();
 
-	myo::Renderer::EndScene();
+	irene::Renderer::EndScene();
 
 	// Phong Lighting components
 	m_DiffuseColor = glm::vec3(m_LightColor) * m_LightIntensity; // decrease the influence
@@ -59,10 +59,10 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 	m_LightPos.y = sin(glfwGetTime());
 	m_LightPos.z = cos(glfwGetTime() * 2.0f);
 
-	myo::Renderer3D::BeginScene(m_CameraController.GetCamera());
+	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
 	// Lamp
-	myo::Renderer3D::DrawColoredCube(m_LightColor * m_LightIntensity, m_LightPos, glm::vec3(0.2f));
-	myo::Renderer3D::EndScene();
+	irene::Renderer3D::DrawColoredCube(m_LightColor * m_LightIntensity, m_LightPos, glm::vec3(0.2f));
+	irene::Renderer3D::EndScene();
 }
 
 void NanosuitLayer::OnImGuiRender()
@@ -73,7 +73,7 @@ void NanosuitLayer::OnImGuiRender()
 	ImGui::End();
 }
 
-void NanosuitLayer::OnEvent(myo::Event& e)
+void NanosuitLayer::OnEvent(irene::Event& e)
 {
 	m_CameraController.OnEvent(e);
 }

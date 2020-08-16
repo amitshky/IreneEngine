@@ -1,32 +1,32 @@
 #pragma once
 
-#include <My_OpenGL.h>
+#include <Irene.h>
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class NanosuitLayer : public myo::Layer
+class NanosuitLayer : public irene::Layer
 {
 public:
 	NanosuitLayer();
 	virtual ~NanosuitLayer() = default;
 
 	virtual void OnAttach() override;
-	virtual void OnUpdate(myo::Timestep ts) override;
+	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual void OnImGuiRender() override;
-	virtual void OnEvent(myo::Event& e) override;
+	virtual void OnEvent(irene::Event& e) override;
 
 private:
-	myo::CameraController m_CameraController;
+	irene::CameraController m_CameraController;
 
 	// Spot Light properties
 	//float m_InnerCutOff = glm::radians(12.5f);
 	//float m_OuterCutOff = glm::radians(20.0f);
 
-	myo::Ref<myo::Shader> m_NanosuitShader;
-	myo::Ref<myo::Model> m_NanosuitModel;
+	irene::Ref<irene::Shader> m_NanosuitShader;
+	irene::Ref<irene::Model> m_NanosuitModel;
 
 	// Light properties
 	glm::vec3 m_LightPos = glm::vec3(1.0f, 1.0f, 1.5f);
