@@ -1,39 +1,32 @@
 #pragma once
 
-#include <My_OpenGL.h>
+#include <Irene.h>
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class BlendingTestLayer : public myo::Layer
+class BlendingTestLayer : public irene::Layer
 {
 public:
 	BlendingTestLayer();
 	virtual ~BlendingTestLayer();
 
-	void OnUpdate(myo::Timestep ts);
-	virtual void OnImGuiRender();
-	void OnEvent(myo::Event& e);
+	virtual void OnAttach() override;
+	virtual void OnDetach() override;
+	virtual void OnUpdate(irene::Timestep ts) override;
+	virtual void OnImGuiRender() override;
+	virtual void OnEvent(irene::Event& e) override;
 
 private:
-	myo::CameraController m_CameraController;
+	irene::CameraController m_CameraController;
 
-	/// Cube
-	myo::Ref<myo::VertexArray> m_CubeVA;
-	myo::Ref<myo::VertexBuffer> m_CubeVB;
-	myo::Ref<myo::Shader> m_CubeShader;
+	// Cube
+	irene::Ref<irene::Texture2D> m_DiffuseMap;
 
-	myo::Ref<myo::Texture2D> m_DiffuseMap;
-
-	/// Transparent plane
+	// Transparent plane
 	std::vector<glm::vec3> m_TransparentPlanePosition;
-
-	myo::Ref<myo::VertexArray> m_TransparentVA;
-	myo::Ref<myo::VertexBuffer> m_TransparentVB;
-	myo::Ref<myo::Shader> m_TransparentShader;
-
-	myo::Ref<myo::Texture2D> m_TransparentTexture;
+	irene::Ref<irene::Texture2D> m_TransparentTexture;
 
 };

@@ -1,41 +1,39 @@
 #pragma once
 
-#include <My_OpenGL.h>
+#include <Irene.h>
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class NanosuitLayer : public myo::Layer
+class NanosuitLayer : public irene::Layer
 {
 public:
 	NanosuitLayer();
 	virtual ~NanosuitLayer() = default;
 
-	void OnUpdate(myo::Timestep ts) override;
+	virtual void OnAttach() override;
+	virtual void OnDetach() override;
+	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual void OnImGuiRender() override;
-	void OnEvent(myo::Event& e) override;
+	virtual void OnEvent(irene::Event& e) override;
 
 private:
-	myo::CameraController m_CameraController;
+	irene::CameraController m_CameraController;
 
-	/// Spot Light properties
-	float m_InnerCutOff = glm::radians(12.5f);
-	float m_OuterCutOff = glm::radians(20.0f);
+	// Spot Light properties // uncomment code in shader as well
+	//float m_InnerCutOff = glm::radians(12.5f);
+	//float m_OuterCutOff = glm::radians(20.0f);
 
-	myo::Ref<myo::VertexArray> m_LampVA;
-	myo::Ref<myo::VertexBuffer> m_LampVBO;
-	myo::Ref<myo::Shader> m_LampShader;
+	irene::Ref<irene::Shader> m_NanosuitShader;
+	irene::Ref<irene::Model> m_NanosuitModel;
 
-	myo::Ref<myo::Shader> m_NanosuitShader;
-	myo::Ref<myo::Model> m_NanosuitModel;
-
-	/// Light properties
+	// Light properties
 	glm::vec3 m_LightPos = glm::vec3(1.0f, 1.0f, 1.5f);
-	glm::vec3 m_DiffuseColor;
-	glm::vec3 m_AmbientColor;
-	glm::vec3 m_SpecularColor;
+	glm::vec3 m_DiffuseColor = glm::vec3(1.0f);
+	glm::vec3 m_AmbientColor = glm::vec3(1.0f);
+	glm::vec3 m_SpecularColor = glm::vec3(1.0f);
 
 	glm::vec4 m_LightColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float m_LightIntensity = 3.0f;

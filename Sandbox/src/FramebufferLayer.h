@@ -1,42 +1,35 @@
 #pragma once
 
-#include <My_OpenGL.h>
+#include <Irene.h>
 
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class FramebufferLayer : public myo::Layer
+class FramebufferLayer : public irene::Layer
 {
 public:
 	FramebufferLayer();
 	virtual ~FramebufferLayer();
 
 	virtual void OnAttach() override;
-	virtual void OnUpdate(myo::Timestep ts) override;
+	virtual void OnDetach() override;
+	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual virtual void OnImGuiRender() override;
-	virtual void OnEvent(myo::Event& e) override;
+	virtual void OnEvent(irene::Event& e) override;
 
 private:
-	myo::CameraController m_CameraController;
+	irene::CameraController m_CameraController;
 
-	myo::Ref<myo::Shader> m_Shader;
-	myo::Ref<myo::Shader> m_ScreenShader;
+	irene::Ref<irene::Shader> m_ScreenShader;
 
-	/// Cube
-	myo::Ref<myo::VertexArray> m_CubeVA;
-	myo::Ref<myo::VertexBuffer> m_CubeVB;
-	myo::Ref<myo::Texture2D> m_CubeTexture;
+	irene::Ref<irene::Texture2D> m_CubeTexture;
+	irene::Ref<irene::Texture2D> m_PlaneTexture;
 
-	/// Transparent plane
-	myo::Ref<myo::VertexArray> m_PlaneVA;
-	myo::Ref<myo::VertexBuffer> m_PlaneVB;
-	myo::Ref<myo::Texture2D> m_PlaneTexture;
-
-	/// Framebuffer
-	myo::Ref<myo::Framebuffer> m_Framebuffer;
-	myo::Ref<myo::VertexArray> m_QuadVA;	// to fill the entire viewport
-	myo::Ref<myo::VertexBuffer> m_QuadVB;
-	myo::Ref<myo::Shader> m_QuadShader;
+	// Framebuffer
+	irene::Ref<irene::Framebuffer> m_Framebuffer;
+	irene::Ref<irene::VertexArray> m_QuadVA;	// to fill the entire viewport
+	irene::Ref<irene::VertexBuffer> m_QuadVB;
+	irene::Ref<irene::Shader> m_QuadShader;
 };

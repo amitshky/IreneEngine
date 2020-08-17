@@ -5,104 +5,29 @@
 NanosuitLayer::NanosuitLayer()
 	: Layer("Nanosuit"), m_CameraController(16.0f / 9.0f)
 {
-	float vertices[] = {
-		// positions			// normals				// texture coords
-		-0.5f, -0.5f, -0.5f,	 0.0f,  0.0f, -1.0f,	 0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,	 0.0f,  0.0f, -1.0f,	 1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,	 0.0f,  0.0f, -1.0f,	 1.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,	 0.0f,  0.0f, -1.0f,	 1.0f,  1.0f,
-		-0.5f,  0.5f, -0.5f,	 0.0f,  0.0f, -1.0f,	 0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,	 0.0f,  0.0f, -1.0f,	 0.0f,  0.0f,
-
-		-0.5f, -0.5f,  0.5f,	 0.0f,  0.0f,  1.0f,	 0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,	 0.0f,  0.0f,  1.0f,	 1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,	 0.0f,  0.0f,  1.0f,	 1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,	 0.0f,  0.0f,  1.0f,	 1.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,	 0.0f,  0.0f,  1.0f,	 0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,	 0.0f,  0.0f,  1.0f,	 0.0f,  0.0f,
-
-		-0.5f,  0.5f,  0.5f,	-1.0f,  0.0f,  0.0f,	 1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,	-1.0f,  0.0f,  0.0f,	 1.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,	-1.0f,  0.0f,  0.0f,	 0.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f,	-1.0f,  0.0f,  0.0f,	 0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,	-1.0f,  0.0f,  0.0f,	 0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,	-1.0f,  0.0f,  0.0f,	 1.0f,  0.0f,
-
-		 0.5f,  0.5f,  0.5f,	 1.0f,  0.0f,  0.0f,	 1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,	 1.0f,  0.0f,  0.0f,	 1.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,	 1.0f,  0.0f,  0.0f,	 0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,	 1.0f,  0.0f,  0.0f,	 0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,	 1.0f,  0.0f,  0.0f,	 0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,	 1.0f,  0.0f,  0.0f,	 1.0f,  0.0f,
-
-		-0.5f, -0.5f, -0.5f,	 0.0f, -1.0f,  0.0f,	 0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,	 0.0f, -1.0f,  0.0f,	 1.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,	 0.0f, -1.0f,  0.0f,	 1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,	 0.0f, -1.0f,  0.0f,	 1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,	 0.0f, -1.0f,  0.0f,	 0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,	 0.0f, -1.0f,  0.0f,	 0.0f,  1.0f,
-
-		-0.5f,  0.5f, -0.5f,	 0.0f,  1.0f,  0.0f,	 0.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,	 0.0f,  1.0f,  0.0f,	 1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,	 0.0f,  1.0f,  0.0f,	 1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,	 0.0f,  1.0f,  0.0f,	 1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,	 0.0f,  1.0f,  0.0f,	 0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,	 0.0f,  1.0f,  0.0f,	 0.0f,  1.0f
-	};
-
-	/// Lamp object
-	m_LampVA = myo::CreateRef<myo::VertexArray>();
-	m_LampVBO = myo::CreateRef<myo::VertexBuffer>(vertices, sizeof(vertices));
-	m_LampVBO->SetLayout({
-		{myo::ShaderDataType::Float3, "a_Position"},
-		{myo::ShaderDataType::Float3, "a_Normal"},
-		{myo::ShaderDataType::Float2, "a_TexCoords"}
-	});
-	m_LampVA->AddVertexBuffer(m_LampVBO);
-
-	m_LampShader = myo::CreateRef<myo::Shader>("assets/shaders/Light.shader");
-
-	m_LampVBO->Unbind();
-	m_LampVA->Unbind();
-	m_LampShader->Unbind();
-
-	/// Model loading
-	m_NanosuitShader = myo::CreateRef<myo::Shader>("assets/shaders/NanosuitModel.shader");
-	m_NanosuitModel = myo::CreateRef<myo::Model>("assets/3DModels/nanosuit/nanosuit.obj");
+	
 }
 
-void NanosuitLayer::OnUpdate(myo::Timestep ts)
+void NanosuitLayer::OnAttach()
 {
-	myo::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1.0f });
-	myo::RenderCommand::Clear();
+	// Model loading
+	m_NanosuitShader = irene::Shader::Create("assets/shaders/NanosuitModel.shader");
+	m_NanosuitModel = irene::CreateRef<irene::Model>("assets/3DModels/nanosuit/nanosuit.obj");
+}
+
+void NanosuitLayer::OnDetach()
+{
+}
+
+void NanosuitLayer::OnUpdate(irene::Timestep ts)
+{
+	irene::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+	irene::RenderCommand::Clear();
 
 	m_CameraController.OnUpdate(ts);
-	myo::Renderer::BeginScene(m_CameraController.GetCamera());
+	irene::Renderer::BeginScene(m_CameraController.GetCamera());
 
-	/// Phong Lighting components
-	m_DiffuseColor = glm::vec3(m_LightColor) * m_LightIntensity; // decrease the influence
-	m_AmbientColor = m_DiffuseColor * glm::vec3(0.1f); // low influence
-	m_SpecularColor = glm::vec3(m_LightColor) * m_LightIntensity;
-
-	/// Light position	// use this to rotate a point light source
-	m_LightPos.x = sin(glfwGetTime() * 2.0f);
-	m_LightPos.y = sin(glfwGetTime());
-	m_LightPos.z = cos(glfwGetTime() * 2.0f);
-
-	glm::mat4 model;
-
-	/// Lamp
-	m_LampVA->Bind();
-	m_LampShader->Bind();
-	m_LampShader->SetFloat3("u_Color", m_LightColor * m_LightIntensity);
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, m_LightPos) * glm::scale(model, glm::vec3(0.1f));
-
-	myo::Renderer::Submit(m_LampShader, 36, model);
-	m_LampVA->Unbind();
-	m_LampShader->Unbind();
-
-	/// Nanosuit model
+	// Nanosuit model
 	m_NanosuitShader->Bind();
 	m_NanosuitShader->SetFloat3("u_ViewPos", m_CameraController.GetCamera().GetPosition());
 
@@ -121,13 +46,28 @@ void NanosuitLayer::OnUpdate(myo::Timestep ts)
 	m_NanosuitShader->SetFloat("u_Light.linear", 0.09f);
 	m_NanosuitShader->SetFloat("u_Light.quadratic", 0.032f);
 
-	model = glm::mat4(1.0f);
+	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)) * glm::scale(model, glm::vec3(0.2f));
 
 	m_NanosuitModel->Draw(m_NanosuitShader, model);
 	m_NanosuitShader->Unbind();
 
-	myo::Renderer::EndScene();
+	irene::Renderer::EndScene();
+
+	// Phong Lighting components
+	m_DiffuseColor = glm::vec3(m_LightColor) * m_LightIntensity; // decrease the influence
+	m_AmbientColor = m_DiffuseColor * glm::vec3(0.1f); // low influence
+	m_SpecularColor = glm::vec3(m_LightColor) * m_LightIntensity;
+
+	// Light position	// use this to rotate a point light source
+	m_LightPos.x = sin(glfwGetTime() * 2.0f);
+	m_LightPos.y = sin(glfwGetTime());
+	m_LightPos.z = cos(glfwGetTime() * 2.0f);
+
+	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
+	// Lamp
+	irene::Renderer3D::DrawColoredCube(m_LightColor * m_LightIntensity, m_LightPos, glm::vec3(0.2f));
+	irene::Renderer3D::EndScene();
 }
 
 void NanosuitLayer::OnImGuiRender()
@@ -138,7 +78,7 @@ void NanosuitLayer::OnImGuiRender()
 	ImGui::End();
 }
 
-void NanosuitLayer::OnEvent(myo::Event& e)
+void NanosuitLayer::OnEvent(irene::Event& e)
 {
 	m_CameraController.OnEvent(e);
 }

@@ -10,8 +10,7 @@ out vec3 Normal;
 out vec2 TexCoords;
 
 uniform mat4 u_Model;
-uniform mat4 u_View;
-uniform mat4 u_Projection;
+uniform mat4 u_ViewProjection;
 
 void main()
 {
@@ -19,7 +18,7 @@ void main()
 	Normal = mat3(transpose(inverse(u_Model))) * a_Normal; // the inverse part is very taxing on performance // it is used for non uniform scaling
 	TexCoords = a_TexCoords;
 
-	gl_Position = u_Projection * u_View * vec4(FragPos, 1.0f);
+	gl_Position = u_ViewProjection * vec4(FragPos, 1.0f);
 }
 
 #shader fragment
@@ -56,8 +55,6 @@ uniform vec3 u_ViewPos;
 uniform Materials u_Material;
 uniform Light u_Light;
 
-vec3 boxColor = vec3(0.5f, 0.0f, 0.0f);
-
 void main()
 {
 	// ambient
@@ -77,13 +74,6 @@ void main()
 	//float spec = pow(max(dot(viewDir, reflectDir), 0.0f), u_Material.shininess); // the last parameter is the shininess value
 	vec3 specular = u_Light.specular * spec * texture(u_Material.specular, TexCoords).rgb;
 	
-	// spot light
-	float theta = dot(lightDir, normalize(-u_Light.direction));	// for spot light
-	float epsilon = u_Light.cutOff - u_Light.outerCutOff;
-	float intensity = clamp((theta - u_Light.outerCutOff) / epsilon, 0.0, 1.0);	// clamps from 0 - 1
-	diffuse *= intensity;
-	specular *= intensity;
-
 	// Intensity attenuation
 	float distance = length(u_Light.position - FragPos);
 	float attenuation = 1.0f / (u_Light.constant + u_Light.linear * distance + u_Light.quadratic * (distance * distance));

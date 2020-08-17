@@ -1,12 +1,12 @@
-#include <My_OpenGL.h>
-#include <My_OpenGL/Core/EntryPoint.h>
+#include <Irene.h>
+#include <Irene/Core/EntryPoint.h>
 
 //#include "NanosuitLayer.h"
 //#include "CubeLayer.h"
 //#include "BlendingTestLayer.h"
 #include "FramebufferLayer.h"
 
-class Sandbox : public myo::Application
+class Sandbox : public irene::Application
 {
 public:
 	Sandbox()
@@ -20,7 +20,7 @@ public:
 
 };
 
-myo::Application* myo::CreateApplication()
+irene::Application* irene::CreateApplication()
 {
 	return new Sandbox();
 }
