@@ -1,18 +1,14 @@
 #pragma once
 
-struct GLFWwindow;
-
 namespace irene{
 
 	class GraphicsContext
 	{
 	public:
-		GraphicsContext(GLFWwindow* windowHandle);
-		void Init();
-		void SwapBuffers();
+		virtual void Init() = 0;
+		virtual void SwapBuffers() = 0;
 
-	private:
-		GLFWwindow* m_WindowHandle;
+		static Scope<GraphicsContext> Create(void* window);
 	};
 
 }

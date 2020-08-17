@@ -14,6 +14,7 @@ public:
 	virtual ~FramebufferLayer();
 
 	virtual void OnAttach() override;
+	virtual void OnDetach() override;
 	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual virtual void OnImGuiRender() override;
 	virtual void OnEvent(irene::Event& e) override;
@@ -21,7 +22,6 @@ public:
 private:
 	irene::CameraController m_CameraController;
 
-	irene::Ref<irene::Shader> m_Shader;
 	irene::Ref<irene::Shader> m_ScreenShader;
 
 	irene::Ref<irene::Texture2D> m_CubeTexture;

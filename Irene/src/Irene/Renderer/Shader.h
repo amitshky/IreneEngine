@@ -14,39 +14,20 @@ namespace irene {
 	class Shader
 	{
 	public:
-		Shader(const std::string& filepath);
-		~Shader();
+		virtual ~Shader() = default;
 
-		void Bind();
-		void Unbind();
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		void SetInt(const std::string& name, int value);
-		void SetFloat(const std::string& name, float value);
-		void SetFloat3(const std::string& name, const glm::vec3& value);
-		void SetFloat4(const std::string& name, const glm::vec4& value);
-		void SetMat4(const std::string& name, const glm::mat4& value);
+		// set uniform
+		virtual void SetInt(const std::string & name, int value) = 0;
+		virtual void SetIntArray(const std::string & name, int* values, uint32_t) = 0;
+		virtual void SetFloat(const std::string & name, float value) = 0;
+		virtual void SetFloat3(const std::string & name, const glm::vec3 & value) = 0;
+		virtual void SetFloat4(const std::string & name, const glm::vec4 & value) = 0;
+		virtual void SetMat4(const std::string & name, const glm::mat4 & value) = 0;
 
-		void UploadUniformInt(const std::string& name, int value);
-
-		void UploadUniformFloat(const std::string& name, float value);
-		void UploadUniformFloat2(const std::string& name, const glm::vec2& value);
-		void UploadUniformFloat3(const std::string& name, const glm::vec3& value);
-		void UploadUniformFloat4(const std::string& name, const glm::vec4& value);
-
-		void UploadUniformMat3(const std::string& name, const glm::mat3& matrix);
-		void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
-
-	private:
-		ShaderProgramSource ParseShader(const std::string& filepath);
-		unsigned int CompileShader(unsigned int type, const std::string& source);
-		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
-
-		int GetUniformLocation(const std::string& name);
-
-	private:
-		std::string m_Filepath;
-		unsigned int m_RendererID;	// ID of the shaderProgram
-		std::unordered_map<std::string, int> m_UniformLocationCache;
+		static Ref<Shader> Create(const std::string & filepath);
 	};
 
 }

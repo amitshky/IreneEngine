@@ -1,15 +1,13 @@
 #include "pch.h"
 #include "Mesh.h"
 
-#include <glad/glad.h>
-
 namespace irene {
 
 	Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& indices, std::vector<Ref<Texture2D>>& textures)
 	{
-		m_VAO = CreateRef<VertexArray>();
-		m_VBO = CreateRef<VertexBuffer>(vertices);
-		m_EBO = CreateRef<IndexBuffer>(indices, indices.size());
+		m_VAO = VertexArray::Create();
+		m_VBO = VertexBuffer::Create(vertices);
+		m_EBO = IndexBuffer::Create(indices, indices.size());
 		m_Textures = textures;
 
 		Init();

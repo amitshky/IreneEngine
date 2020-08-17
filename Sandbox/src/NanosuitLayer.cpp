@@ -5,12 +5,17 @@
 NanosuitLayer::NanosuitLayer()
 	: Layer("Nanosuit"), m_CameraController(16.0f / 9.0f)
 {
-	// Model loading
-	m_NanosuitShader = irene::CreateRef<irene::Shader>("assets/shaders/NanosuitModel.shader");
-	m_NanosuitModel = irene::CreateRef<irene::Model>("assets/3DModels/nanosuit/nanosuit.obj");
+	
 }
 
 void NanosuitLayer::OnAttach()
+{
+	// Model loading
+	m_NanosuitShader = irene::Shader::Create("assets/shaders/NanosuitModel.shader");
+	m_NanosuitModel = irene::CreateRef<irene::Model>("assets/3DModels/nanosuit/nanosuit.obj");
+}
+
+void NanosuitLayer::OnDetach()
 {
 }
 

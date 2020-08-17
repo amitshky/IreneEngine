@@ -5,10 +5,6 @@
 BlendingTestLayer::BlendingTestLayer()
 	: Layer("Blending Test"), m_CameraController(16.0f / 9.0f)
 {
-	m_TransparentPlanePosition.push_back(glm::vec3(0.3f, 0.0f, 1.8f));
-	m_TransparentPlanePosition.push_back(glm::vec3(0.5f, 0.0f, 1.5f));
-	
-	m_TransparentTexture = irene::CreateRef<irene::Texture2D>("assets/textures/transparentWindow.png");
 }
 
 BlendingTestLayer::~BlendingTestLayer()
@@ -17,7 +13,15 @@ BlendingTestLayer::~BlendingTestLayer()
 
 void BlendingTestLayer::OnAttach()
 {
-	m_DiffuseMap = irene::CreateRef<irene::Texture2D>("assets/textures/container2.png");
+	m_TransparentPlanePosition.push_back(glm::vec3(0.3f, 0.0f, 1.8f));
+	m_TransparentPlanePosition.push_back(glm::vec3(0.5f, 0.0f, 1.5f));
+
+	m_TransparentTexture = irene::Texture2D::Create("assets/textures/transparentWindow.png");
+	m_DiffuseMap = irene::Texture2D::Create("assets/textures/container2.png");
+}
+
+void BlendingTestLayer::OnDetach()
+{
 }
 
 void BlendingTestLayer::OnUpdate(irene::Timestep ts)

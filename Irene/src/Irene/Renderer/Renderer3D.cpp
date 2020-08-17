@@ -84,8 +84,8 @@ namespace irene {
 		};
 
 		// Cube
-		s_Data.CubeVertexArray = CreateRef<VertexArray>();
-		s_Data.CubeVertexBuffer = CreateRef<VertexBuffer>(cubeVertices, sizeof(cubeVertices));
+		s_Data.CubeVertexArray = VertexArray::Create();
+		s_Data.CubeVertexBuffer = VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
 		s_Data.CubeVertexBuffer->SetLayout({
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float3, "a_Normal"},
@@ -96,8 +96,8 @@ namespace irene {
 		s_Data.CubeVertexArray->Unbind();
 
 		// Plane
-		s_Data.PlaneVertexArray = CreateRef<VertexArray>();
-		s_Data.PlaneVertexBuffer = CreateRef<VertexBuffer>(planeVertices, sizeof(planeVertices));
+		s_Data.PlaneVertexArray = VertexArray::Create();
+		s_Data.PlaneVertexBuffer = VertexBuffer::Create(planeVertices, sizeof(planeVertices));
 		s_Data.PlaneVertexBuffer->SetLayout({
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float3, "a_Normal"},
@@ -108,13 +108,13 @@ namespace irene {
 		s_Data.PlaneVertexArray->Unbind();
 
 		// White texture
-		s_Data.WhiteTexture = CreateRef<Texture2D>(1, 1);		// creates a 1x1 white texture
+		s_Data.WhiteTexture = Texture2D::Create(1, 1);		// creates a 1x1 white texture
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
 		// Shaders
-		s_Data.TextureShader = CreateRef<Shader>("assets/shaders/texture.shader");
-		s_Data.LightingShader = CreateRef<Shader>("assets/shaders/BasicLighting.shader");
+		s_Data.TextureShader = Shader::Create("assets/shaders/texture.shader");
+		s_Data.LightingShader = Shader::Create("assets/shaders/BasicLighting.shader");
 
 		s_Data.LightingShader->Bind();
 		s_Data.LightingShader->SetInt("u_Material.diffuse", 0);

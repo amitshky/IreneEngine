@@ -47,6 +47,11 @@ namespace irene {
 		uint32_t Offset;
 		bool Normalized;
 
+		BufferElement()
+			: Type(ShaderDataType::None), Size(ShaderDataTypeSize(ShaderDataType::None)), Offset(0), Normalized(false)
+		{
+		}
+
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			: Type(type), Name(name), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized)
 		{
@@ -112,36 +117,32 @@ namespace irene {
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(float* vertices, uint32_t size);
-		VertexBuffer(std::vector<Vertex>& vertices);
-		~VertexBuffer();
+		virtual ~VertexBuffer() {};
 
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		inline void SetLayout(const BufferLayout& layout) { m_Layout = layout; }
-		inline const BufferLayout& GetLayout() const { return m_Layout; }
+		static Ref<VertexBuffer> Create(uint32_t size);
+		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
+		static Ref<VertexBuffer> Create(std::vector<Vertex>& vertices);
 
-	private:
-		uint32_t m_RendererID;
-		BufferLayout m_Layout;
+		virtual void SetData(const void* data, uint32_t size) = 0;
+		virtual inline void SetLayout(const BufferLayout& layout) = 0;
+		virtual inline const BufferLayout& GetLayout() const = 0;
 	};
 
 	class IndexBuffer
 	{
 	public:
-		IndexBuffer(uint32_t* indices, uint32_t count);
-		IndexBuffer(std::vector<uint32_t>& indices, uint32_t count);
-		~IndexBuffer();
+		virtual ~IndexBuffer() {}
 
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		inline uint32_t GetCount() const { return m_Count; }
+		virtual uint32_t GetCount() const = 0;
 
-	private:
-		uint32_t m_RendererID;
-		uint32_t m_Count;
+		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
+		static Ref<IndexBuffer> Create(std::vector<uint32_t>& indices, uint32_t count);
 	};
 
 }

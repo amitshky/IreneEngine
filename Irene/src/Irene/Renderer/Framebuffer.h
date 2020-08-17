@@ -16,24 +16,18 @@ namespace irene {
 	class Framebuffer
 	{
 	public:
-		Framebuffer(const FramebufferSpecification& spec);
-		~Framebuffer();
+		virtual ~Framebuffer() = default;
 
-		void Invalidate();
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 
-		void Bind();
-		void Unbind();
+		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
-		void Resize(uint32_t width, uint32_t height);
+		virtual uint32_t GetColorAttachmentRendererID() const = 0;
 
-		uint32_t GetColorAttachmentRendererID() const { return m_ColorAttachment; }
+		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
-		const FramebufferSpecification& GetSpecification() const { return m_Specification; }
-
-	private:
-		uint32_t m_RendererID = 0;
-		uint32_t m_ColorAttachment = 0, m_DepthAttachment = 0;
-		FramebufferSpecification m_Specification;
+		static Ref<Framebuffer> Create(const FramebufferSpecification & spec);
 	};
 
 }

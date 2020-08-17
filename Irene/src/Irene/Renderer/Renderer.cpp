@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
 #include "Renderer3D.h"
 
 namespace irene {
@@ -30,8 +31,8 @@ namespace irene {
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& model)
 	{
 		shader->Bind();
-		shader->UploadUniformMat4("u_ViewProjection", s_SceneData->m_ViewProjectionMatrix);
-		shader->UploadUniformMat4("u_Model", model);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", s_SceneData->m_ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Model", model);
 		vertexArray->Bind();
 		RenderCommand::Draw(vertexArray);
 	}
@@ -39,8 +40,8 @@ namespace irene {
 	void Renderer::Submit(const Ref<Shader>& shader, uint32_t count, const glm::mat4& model)
 	{
 		shader->Bind();
-		shader->SetMat4("u_ViewProjection", s_SceneData->m_ViewProjectionMatrix);
-		shader->SetMat4("u_Model", model);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", s_SceneData->m_ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Model", model);
 		RenderCommand::Draw(count);
 	}
 

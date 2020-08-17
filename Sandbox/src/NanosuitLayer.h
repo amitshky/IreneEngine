@@ -14,6 +14,7 @@ public:
 	virtual ~NanosuitLayer() = default;
 
 	virtual void OnAttach() override;
+	virtual void OnDetach() override;
 	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual void OnImGuiRender() override;
 	virtual void OnEvent(irene::Event& e) override;
@@ -21,7 +22,7 @@ public:
 private:
 	irene::CameraController m_CameraController;
 
-	// Spot Light properties
+	// Spot Light properties // uncomment code in shader as well
 	//float m_InnerCutOff = glm::radians(12.5f);
 	//float m_OuterCutOff = glm::radians(20.0f);
 
@@ -30,9 +31,9 @@ private:
 
 	// Light properties
 	glm::vec3 m_LightPos = glm::vec3(1.0f, 1.0f, 1.5f);
-	glm::vec3 m_DiffuseColor;
-	glm::vec3 m_AmbientColor;
-	glm::vec3 m_SpecularColor;
+	glm::vec3 m_DiffuseColor = glm::vec3(1.0f);
+	glm::vec3 m_AmbientColor = glm::vec3(1.0f);
+	glm::vec3 m_SpecularColor = glm::vec3(1.0f);
 
 	glm::vec4 m_LightColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float m_LightIntensity = 3.0f;

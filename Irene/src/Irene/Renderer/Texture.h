@@ -1,33 +1,31 @@
 #pragma once
 
-#include <glad/glad.h>
+#include "Irene/Core/Core.h"
 
 namespace irene {
 
-	class Texture2D
+	class Texture
 	{
 	public:
-		Texture2D(uint32_t width, uint32_t height);
-		Texture2D(const std::string& path);
-		Texture2D(const std::string& path, const std::string& directory, const std::string& typeName);
-		~Texture2D();
+		virtual ~Texture() = default;
 
-		inline uint32_t GetWidth() const { return m_Width; }
-		inline uint32_t GetHeight() const { return m_Height; }
-		inline std::string GetType() const { return m_Type; }
-		inline std::string GetPath() const { return m_Path; }
-		inline uint32_t GetRendererID() const { return m_RendererID; } // remove this later
+		virtual inline uint32_t GetWidth() const = 0;
+		virtual inline uint32_t GetHeight() const = 0;
+		virtual inline std::string GetType() const = 0;
+		virtual inline std::string GetPath() const = 0;
 
-		void SetData(void* data, uint32_t size);
-		void Bind(uint32_t slot = 0) const;
+		virtual void SetData(void* data, uint32_t size) = 0;
+		virtual void Bind(uint32_t slot = 0) const = 0;
 
-	private:
-		std::string m_Path;
-		uint32_t m_Width, m_Height;
-		uint32_t m_RendererID;
-		GLenum m_InternalFormat, m_DataFormat;
+		virtual bool operator==(const Texture& other) const = 0;
+	};
 
-		std::string m_Type = "N/A";		// when we need to load multiple textures
+	class Texture2D : public Texture
+	{
+	public:
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create(const std::string& path, const std::string& directory, const std::string& typeName);
 	};
 
 }

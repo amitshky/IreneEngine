@@ -17,14 +17,14 @@ FramebufferLayer::FramebufferLayer()
 		 1.0f,  1.0f,	1.0f, 1.0f
 	};
 
-	m_ScreenShader = irene::CreateRef<irene::Shader>("assets/shaders/FramebufferScreen.shader");
+	m_ScreenShader = irene::Shader::Create("assets/shaders/FramebufferScreen.shader");
 
-	m_CubeTexture = irene::CreateRef<irene::Texture2D>("assets/textures/container.jpg");
-	m_PlaneTexture = irene::CreateRef<irene::Texture2D>("assets/textures/wall.jpg");
+	m_CubeTexture = irene::Texture2D::Create("assets/textures/container.jpg");
+	m_PlaneTexture = irene::Texture2D::Create("assets/textures/wall.jpg");
 
 	// Quad
-	m_QuadVA = irene::CreateRef<irene::VertexArray>();
-	m_QuadVB = irene::CreateRef<irene::VertexBuffer>(quadVertices, sizeof(quadVertices));
+	m_QuadVA = irene::VertexArray::Create();
+	m_QuadVB = irene::VertexBuffer::Create(quadVertices, sizeof(quadVertices));
 	m_QuadVB->SetLayout({
 		{irene::ShaderDataType::Float2, "a_Position"},
 		{irene::ShaderDataType::Float2, "a_TexCoords"}
@@ -46,7 +46,11 @@ void FramebufferLayer::OnAttach()
 	fbSpec.Width = 1280;
 	fbSpec.Height = 720;
 
-	m_Framebuffer = irene::CreateRef<irene::Framebuffer>(fbSpec);
+	m_Framebuffer = irene::Framebuffer::Create(fbSpec);
+}
+
+void FramebufferLayer::OnDetach()
+{
 }
 
 void FramebufferLayer::OnUpdate(irene::Timestep ts)

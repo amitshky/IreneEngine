@@ -13,8 +13,12 @@ CubeLayer::~CubeLayer()
 
 void CubeLayer::OnAttach()
 {
-	m_DiffuseMap = irene::CreateRef<irene::Texture2D>("assets/textures/container2.png");
-	m_SpecularMap = irene::CreateRef<irene::Texture2D>("assets/textures/container2_specular.png");
+	m_DiffuseMap = irene::Texture2D::Create("assets/textures/container2.png");
+	m_SpecularMap = irene::Texture2D::Create("assets/textures/container2_specular.png");
+}
+
+void CubeLayer::OnDetach()
+{
 }
 
 void CubeLayer::OnUpdate(irene::Timestep ts)

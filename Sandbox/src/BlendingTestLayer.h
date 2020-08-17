@@ -14,6 +14,7 @@ public:
 	virtual ~BlendingTestLayer();
 
 	virtual void OnAttach() override;
+	virtual void OnDetach() override;
 	virtual void OnUpdate(irene::Timestep ts) override;
 	virtual void OnImGuiRender() override;
 	virtual void OnEvent(irene::Event& e) override;

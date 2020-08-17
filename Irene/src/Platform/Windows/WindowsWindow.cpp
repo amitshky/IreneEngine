@@ -45,7 +45,7 @@ namespace irene {
 		}
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		m_Context = CreateScope<GraphicsContext>(m_Window);
+		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
 
 		//glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

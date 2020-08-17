@@ -7,23 +7,17 @@ namespace irene {
 	class VertexArray
 	{
 	public:
-		VertexArray();
-		~VertexArray();
+		virtual ~VertexArray() {};
 
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+		virtual void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) = 0;
+		virtual void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) = 0;
 
-		void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer);
-		void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer);
-
-		const std::vector<Ref<VertexBuffer>>& GetVertexBuffer() const { return m_VertexBuffer; };
-		const Ref<IndexBuffer>& GetIndexBuffer() const { return m_IndexBuffer; };
-
-	private:
-		uint32_t m_RendererID;
-		uint32_t m_VertexBufferIndex = 0;
-		std::vector<Ref<VertexBuffer>> m_VertexBuffer;
-		Ref<IndexBuffer> m_IndexBuffer;
+		virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffer() const = 0;
+		virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
+		
+		static Ref<VertexArray> Create();
 	};
 
 }

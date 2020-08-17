@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Model.h"
 
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -144,7 +143,7 @@ namespace irene {
 			}
 			if (!skip)
 			{	// if texture hasn't been loaded already, load it
-				Ref<Texture2D> texture = CreateRef<Texture2D>(str.C_Str(), m_Directory, typeName);
+				Ref<Texture2D> texture = Texture2D::Create(str.C_Str(), m_Directory, typeName);
 				textures.push_back(texture);
 				m_TexturesLoaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
 			}

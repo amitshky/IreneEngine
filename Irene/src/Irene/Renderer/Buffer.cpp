@@ -1,72 +1,64 @@
 #include "pch.h"
 #include "Buffer.h"
 
-//#include "Renderer.h"
-#include <glad/glad.h>
+#include "Renderer.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace irene {
 
-	// Vertex Buffer
-	VertexBuffer::VertexBuffer(float* vertices, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
 	{
-		glGenBuffers(1, &m_RendererID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
-		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLVertexBuffer>(size);
+		}
+		CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 
-	VertexBuffer::VertexBuffer(std::vector<Vertex>& vertices)
+	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
 	{
-		glGenBuffers(1, &m_RendererID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLVertexBuffer>(vertices, size);
+		}
+		CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 
-	VertexBuffer::~VertexBuffer()
+	Ref<VertexBuffer> VertexBuffer::Create(std::vector<Vertex>& vertices)
 	{
-		glDeleteBuffers(1, &m_RendererID);
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLVertexBuffer>(vertices);
+		}
+		CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 
-	void VertexBuffer::Bind() const
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLIndexBuffer>(indices, count);
+		}
+		CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 
-
-	void VertexBuffer::Unbind() const
+	Ref<IndexBuffer> IndexBuffer::Create(std::vector<uint32_t>& indices, uint32_t count)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	//--------------------------------------------------------------------------------------------
-
-	// Index Buffer
-	IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count) : m_Count(count)
-	{
-		glGenBuffers(1, &m_RendererID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
-	}
-
-	IndexBuffer::IndexBuffer(std::vector<uint32_t>& indices, uint32_t count) : m_Count(count)
-	{
-		glGenBuffers(1, &m_RendererID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), &indices[0], GL_STATIC_DRAW);
-	}
-
-	IndexBuffer::~IndexBuffer()
-	{
-		glDeleteBuffers(1, &m_RendererID);
-	}
-
-	void IndexBuffer::Bind() const
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
-	}
-
-	void IndexBuffer::Unbind() const
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLIndexBuffer>(indices, count);
+		}
+		CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
 	}
 
 }
