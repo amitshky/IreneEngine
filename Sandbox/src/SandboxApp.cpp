@@ -1,9 +1,9 @@
 #include <Irene.h>
 #include <Irene/Core/EntryPoint.h>
 
-//#include "NanosuitLayer.h"
-//#include "CubeLayer.h"
-//#include "BlendingTestLayer.h"
+#include "NanosuitLayer.h"
+#include "CubeLayer.h"
+#include "BlendingTestLayer.h"
 #include "FramebufferLayer.h"
 
 class Sandbox : public irene::Application

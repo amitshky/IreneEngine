@@ -15,11 +15,15 @@ namespace irene {
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
 
+		void OnResize(float width, float height);
+
+		void CalculateView();
+
 		Camera& GetCamera() { return m_Camera; }
 		const Camera& GetCamera() const { return m_Camera; }
 
 		inline float GetZoomLevel() const { return m_ZoomLevel; }
-		inline void SetZoomLevel(float level) { m_ZoomLevel = level; }
+		inline void SetZoomLevel(float level) { m_ZoomLevel = level; CalculateView(); }
 
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);

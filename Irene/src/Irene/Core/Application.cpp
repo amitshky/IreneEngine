@@ -60,9 +60,9 @@ namespace irene {
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)	// going backwards
 		{
-			(*it)->OnEvent(e);
 			if (e.Handled)
 				break;
+			(*it)->OnEvent(e);
 		}
 	}
 
@@ -76,6 +76,11 @@ namespace irene {
 	{
 		m_LayerStack.PushOverlay(overlay);
 		overlay->OnAttach();
+	}
+
+	void Application::Close()
+	{
+		m_Running = false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

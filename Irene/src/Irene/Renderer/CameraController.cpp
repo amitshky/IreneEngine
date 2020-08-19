@@ -61,19 +61,30 @@ namespace irene {
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(CameraController::OnWindowResized));
 	}
 
+	void CameraController::OnResize(float width, float height)
+	{
+		m_AspectRatio = width / height;
+		CalculateView();
+	}
+
+	void CameraController::CalculateView()
+	{
+		m_Camera.SetProjection(m_ZoomLevel, m_AspectRatio);
+	}
+
 	bool CameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
 		m_ZoomLevel -= e.GetYOffset();
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.1f);
 		m_ZoomLevel = std::min(m_ZoomLevel, 90.0f);
-		m_Camera.SetProjection(m_ZoomLevel, m_AspectRatio);
+		CalculateView();
 		return false;
 	}
 
 	bool CameraController::OnWindowResized(WindowResizeEvent& e)
 	{
 		m_AspectRatio = e.GetWidth() && e.GetHeight() ? (float)e.GetWidth() / (float)e.GetHeight() : 0;
-		m_Camera.SetProjection(m_ZoomLevel, m_AspectRatio);
+		CalculateView();
 		return false;
 	}
 
