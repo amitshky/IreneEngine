@@ -15,26 +15,29 @@ namespace irene {
 	void CameraController::OnUpdate(Timestep ts)
 	{
 		// Camera Movement
-		m_CameraTranslationSpeed = m_CameraMovSpeed * m_ZoomLevel * ts;
-		if (Input::IsKeyPressed(KEY_A))
-			m_CameraPosition -= m_Camera.GetRight() * m_CameraTranslationSpeed;
-		else if (Input::IsKeyPressed(KEY_D))
-			m_CameraPosition += m_Camera.GetRight() * m_CameraTranslationSpeed;
+		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5))
+		{
+			m_CameraTranslationSpeed = m_CameraMovSpeed * m_ZoomLevel * ts;
+			if (Input::IsKeyPressed(KEY_A))
+				m_CameraPosition -= m_Camera.GetRight() * m_CameraTranslationSpeed;
+			else if (Input::IsKeyPressed(KEY_D))
+				m_CameraPosition += m_Camera.GetRight() * m_CameraTranslationSpeed;
 
-		if (Input::IsKeyPressed(KEY_W))
-			m_CameraPosition += m_Camera.GetFront() * m_CameraTranslationSpeed;
-		else if (Input::IsKeyPressed(KEY_S))
-			m_CameraPosition -= m_Camera.GetFront() * m_CameraTranslationSpeed;
+			if (Input::IsKeyPressed(KEY_W))
+				m_CameraPosition += m_Camera.GetFront() * m_CameraTranslationSpeed;
+			else if (Input::IsKeyPressed(KEY_S))
+				m_CameraPosition -= m_Camera.GetFront() * m_CameraTranslationSpeed;
 
-		if (Input::IsKeyPressed(KEY_E))
-			m_CameraPosition += m_Camera.GetUp() * m_CameraTranslationSpeed;
-		else if (Input::IsKeyPressed(KEY_Q))
-			m_CameraPosition -= m_Camera.GetUp() * m_CameraTranslationSpeed;
+			if (Input::IsKeyPressed(KEY_E))
+				m_CameraPosition += m_Camera.GetUp() * m_CameraTranslationSpeed;
+			else if (Input::IsKeyPressed(KEY_Q))
+				m_CameraPosition -= m_Camera.GetUp() * m_CameraTranslationSpeed;
 
-		if (Input::IsKeyPressed(KEY_UP))
-			m_CameraPosition += m_Camera.GetUp() * m_CameraTranslationSpeed;
-		else if (Input::IsKeyPressed(KEY_DOWN))
-			m_CameraPosition -= m_Camera.GetUp() * m_CameraTranslationSpeed;
+			if (Input::IsKeyPressed(KEY_UP))
+				m_CameraPosition += m_Camera.GetUp() * m_CameraTranslationSpeed;
+			else if (Input::IsKeyPressed(KEY_DOWN))
+				m_CameraPosition -= m_Camera.GetUp() * m_CameraTranslationSpeed;
+		}
 
 		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5) && (Input::GetMouseX() || Input::GetMouseY()))
 		{

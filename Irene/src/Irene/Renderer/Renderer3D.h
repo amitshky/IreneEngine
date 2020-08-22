@@ -33,22 +33,22 @@ namespace irene {
 		static void EndScene();
 
 		// Plane
-		static void DrawColoredPlane(const glm::vec4& color, const glm::vec3& position, float rotation, 
+		static void DrawPlane(const glm::vec4& color, const glm::vec3& position, float rotation, 
 			const glm::vec3& rotationAxis, const glm::vec3& scale);
 
-		static void DrawTexturedPlane(const Ref<Texture2D>& texture, const glm::vec3& position, float rotation, 
+		static void DrawPlane(const Ref<Texture2D>& texture, const glm::vec3& position, float rotation, 
 			const glm::vec3& rotationAxis, const glm::vec3& scale, float textureTile = 1.0f);
 
-		static void DrawPlaneWithLighting(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
+		static void DrawPlane(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
 			const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale);
 
 
 		// Cube
-		static void DrawColoredCube(const glm::vec4& color, const glm::vec3& position, const glm::vec3& scale);
+		static void DrawCube(const glm::vec4& color, const glm::vec3& position, const glm::vec3& scale);
 
-		static void DrawTexturedCube(const Ref<Texture2D>& texture, const glm::vec3& position, const glm::vec3& scale, float textureTile = 1.0f);
+		static void DrawCube(const Ref<Texture2D>& texture, const glm::vec3& position, const glm::vec3& scale, float textureTile = 1.0f);
 
-		static void DrawCubeWithLighting(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData, 
+		static void DrawCube(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData, 
 			const glm::vec3& position, const glm::vec3& scale);
 	};
 

@@ -145,7 +145,7 @@ namespace irene {
 	{
 	}
 
-	void Renderer3D::DrawColoredPlane(const glm::vec4& color, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
+	void Renderer3D::DrawPlane(const glm::vec4& color, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
 	{
 		const float textureTile = 1.0f;
 
@@ -166,7 +166,7 @@ namespace irene {
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawTexturedPlane(const Ref<Texture2D>& texture, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, 
+	void Renderer3D::DrawPlane(const Ref<Texture2D>& texture, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis,
 		const glm::vec3& scale, float textureTile)
 	{
 		const glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -188,7 +188,7 @@ namespace irene {
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawPlaneWithLighting(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
+	void Renderer3D::DrawPlane(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
 		const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
 	{
 		s_Data.LightingShader->Bind();
@@ -219,7 +219,7 @@ namespace irene {
 	}
 
 
-	void Renderer3D::DrawColoredCube(const glm::vec4& color, const glm::vec3& position, const glm::vec3& scale)
+	void Renderer3D::DrawCube(const glm::vec4& color, const glm::vec3& position, const glm::vec3& scale)
 	{
 		const float textureTile = 1.0f;
 
@@ -239,7 +239,7 @@ namespace irene {
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawTexturedCube(const Ref<Texture2D>& texture, const glm::vec3& position, const glm::vec3& scale, float textureTile)
+	void Renderer3D::DrawCube(const Ref<Texture2D>& texture, const glm::vec3& position, const glm::vec3& scale, float textureTile)
 	{
 		const glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -259,7 +259,7 @@ namespace irene {
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawCubeWithLighting(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
+	void Renderer3D::DrawCube(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
 		const glm::vec3& position, const glm::vec3& scale)
 	{
 		s_Data.LightingShader->Bind();

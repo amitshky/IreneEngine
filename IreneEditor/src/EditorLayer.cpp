@@ -14,6 +14,75 @@ namespace irene {
 
 	void EditorLayer::OnAttach()
 	{
+		float skyboxVertices[] = {
+			// positions
+			-1.0f,  1.0f, -1.0f,
+			-1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+			 1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+
+			-1.0f, -1.0f,  1.0f,
+			-1.0f, -1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f, -1.0f,
+			-1.0f,  1.0f,  1.0f,
+			-1.0f, -1.0f,  1.0f,
+
+			 1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+
+			-1.0f, -1.0f,  1.0f,
+			-1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f, -1.0f,  1.0f,
+			-1.0f, -1.0f,  1.0f,
+
+			-1.0f,  1.0f, -1.0f,
+			 1.0f,  1.0f, -1.0f,
+			 1.0f,  1.0f,  1.0f,
+			 1.0f,  1.0f,  1.0f,
+			-1.0f,  1.0f,  1.0f,
+			-1.0f,  1.0f, -1.0f,
+
+			-1.0f, -1.0f, -1.0f,
+			-1.0f, -1.0f,  1.0f,
+			 1.0f, -1.0f, -1.0f,
+			 1.0f, -1.0f, -1.0f,
+			-1.0f, -1.0f,  1.0f,
+			 1.0f, -1.0f,  1.0f
+		};
+
+		m_SkyboxVA = irene::VertexArray::Create();
+		m_SkyboxVB = irene::VertexBuffer::Create(skyboxVertices, sizeof(skyboxVertices));
+		m_SkyboxVB->SetLayout({
+			{ irene::ShaderDataType::Float3, "a_Position" }
+		});
+		m_SkyboxVA->AddVertexBuffer(m_SkyboxVB);
+
+		m_SkyboxShader = Shader::Create("assets/shaders/Cubemap.shader");
+		m_SkyboxShader->SetInt("u_Skybox", 5);
+		m_SkyboxVA->Unbind();
+		m_SkyboxVB->Unbind();
+		m_SkyboxShader->Unbind();
+
+		std::vector<std::string> faces =
+		{
+			"assets/textures/skybox/right.jpg",
+			"assets/textures/skybox/left.jpg",
+			"assets/textures/skybox/top.jpg",
+			"assets/textures/skybox/bottom.jpg",
+			"assets/textures/skybox/front.jpg",
+			"assets/textures/skybox/back.jpg"
+		};
+		m_CubemapTexture = Texture2D::Create(faces);
+
 		m_CubeTexture = Texture2D::Create("assets/textures/container.jpg");
 		m_PlaneTexture = Texture2D::Create("assets/textures/wall.jpg");
 
@@ -38,10 +107,23 @@ namespace irene {
 			m_CameraController.OnUpdate(ts);
 		
 		Renderer3D::BeginScene(m_CameraController.GetCamera());
-		Renderer3D::DrawTexturedCube(m_CubeTexture, { -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f));
-		Renderer3D::DrawTexturedCube(m_CubeTexture, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));
-		Renderer3D::DrawTexturedPlane(m_PlaneTexture, { 0.0f, -0.5001f, 0.0f }, 1.5708f, { 1.0f, 0.0f, 0.0f }, glm::vec3(8.0f), 2.0f);
+		Renderer3D::DrawCube(m_CubeTexture, { -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f));
+		Renderer3D::DrawCube(m_CubeTexture, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));
+		Renderer3D::DrawPlane(m_PlaneTexture, { 0.0f, -0.5001f, 0.0f }, glm::radians(-90.0f), { 1.0f, 0.0f, 0.0f }, glm::vec3(8.0f), 2.0f);
 		Renderer3D::EndScene();
+
+
+		// Render skybox last
+		glm::mat4 view = glm::mat4(glm::mat3(m_CameraController.GetCamera().GetViewMatrix()));
+		glm::mat4 proj = m_CameraController.GetCamera().GetProjectionMatrix();
+		glm::mat4 viewProj = proj * view;
+		glDepthFunc(GL_LEQUAL);
+		m_SkyboxShader->Bind();
+		m_SkyboxShader->SetMat4("u_ViewProjection", viewProj);
+		m_SkyboxVA->Bind();
+		m_CubemapTexture->Bind(5);
+		irene::RenderCommand::Draw(36);
+		glDepthFunc(GL_LESS);
 		
 		m_Framebuffer->Unbind();
 	}
@@ -78,7 +160,7 @@ namespace irene {
 		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
 		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+		ImGui::Begin("DockSpace", &dockspaceOpen, window_flags);
 		ImGui::PopStyleVar();
 
 		if (opt_fullscreen)
@@ -106,12 +188,16 @@ namespace irene {
 
 			ImGui::EndMenuBar();
 		}
+
 		/////////////////////////////////////
+
 		ImGui::Begin("Settings");
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5) && m_ViewportHovered)
+			ImGui::SetWindowFocus();
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);

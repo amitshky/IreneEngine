@@ -9,6 +9,7 @@ namespace irene {
 	{
 	public:
 		Sandbox()
+			: Application("Irene Editor App")
 		{
 			PushLayer(new EditorLayer());
 		}

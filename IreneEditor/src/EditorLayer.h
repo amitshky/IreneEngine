@@ -35,6 +35,12 @@ namespace irene {
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 		bool m_ViewportFocused = false;
 		bool m_ViewportHovered = false;
+
+		// Cubemaps
+		Ref<VertexArray> m_SkyboxVA;
+		Ref<VertexBuffer> m_SkyboxVB;
+		Ref<Shader> m_SkyboxShader;
+		Ref<Texture2D> m_CubemapTexture;
 	};
 
 }

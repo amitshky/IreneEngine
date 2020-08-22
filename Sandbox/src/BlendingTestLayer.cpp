@@ -31,8 +31,8 @@ void BlendingTestLayer::OnUpdate(irene::Timestep ts)
 
 	m_CameraController.OnUpdate(ts);
 	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
-	irene::Renderer3D::DrawTexturedCube(m_DiffuseMap, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
-	irene::Renderer3D::DrawTexturedCube(m_DiffuseMap, { 0.5f, 0.0f, -1.2f }, { 1.0f, 1.0f, 1.0f });
+	irene::Renderer3D::DrawCube(m_DiffuseMap, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+	irene::Renderer3D::DrawCube(m_DiffuseMap, { 0.5f, 0.0f, -1.2f }, { 1.0f, 1.0f, 1.0f });
 	
 	// sort the transparent windows before rendering
 	std::map<float, glm::vec3> sorted; // map sorts data based on 'key' (key here is distance)
@@ -43,7 +43,7 @@ void BlendingTestLayer::OnUpdate(irene::Timestep ts)
 	}
 
 	for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
-		irene::Renderer3D::DrawTexturedPlane(m_TransparentTexture, it->second, 0.0f, { 0.0f, 0.0f, 1.0f }, glm::vec3(1.0f));
+		irene::Renderer3D::DrawPlane(m_TransparentTexture, it->second, 0.0f, { 0.0f, 0.0f, 1.0f }, glm::vec3(1.0f));
 
 	irene::Renderer3D::EndScene();
 }

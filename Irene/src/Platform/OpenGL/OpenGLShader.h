@@ -36,14 +36,14 @@ namespace irene {
 
 	private:
 		ShaderProgramSource ParseShader(const std::string& filepath);
-		unsigned int CompileShader(unsigned int type, const std::string& source);
-		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+		uint32_t CompileShader(unsigned int type, const std::string& source);
+		uint32_t CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 
 		int GetUniformLocation(const std::string& name);
 
 	private:
 		std::string m_Filepath;
-		unsigned int m_RendererID;	// ID of the shaderProgram
+		uint32_t m_RendererID;	// ID of the shaderProgram
 		std::unordered_map<std::string, int> m_UniformLocationCache;
 	};
 

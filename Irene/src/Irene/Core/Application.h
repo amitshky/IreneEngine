@@ -16,7 +16,7 @@ namespace irene {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Irene Engine");
 		virtual ~Application();
 
 		void Run();

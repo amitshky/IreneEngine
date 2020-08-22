@@ -25,6 +25,7 @@ IncludeDir["ImGui"] = "Irene/vendor/imgui"
 IncludeDir["glm"] = "Irene/vendor/glm"
 IncludeDir["stb_image"] = "Irene/vendor/stb_image"
 IncludeDir["assimp"] = "Irene/vendor/assimp/include"
+IncludeDir["Entt"] = "Irene/vendor/Entt/include"
 
 group "Dependencies"
 	include "Irene/vendor/GLFW"
@@ -75,7 +76,8 @@ project "Irene"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.assimp}"
+		"%{IncludeDir.assimp}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links
@@ -139,7 +141,8 @@ project "Sandbox"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.assimp}",
 		"Irene/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links
@@ -197,7 +200,8 @@ project "IreneEditor"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.assimp}",
 		"Irene/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links
