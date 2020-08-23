@@ -61,9 +61,9 @@ void FramebufferLayer::OnUpdate(irene::Timestep ts)
 	m_CameraController.OnUpdate(ts);
 	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
 
-	irene::Renderer3D::DrawCube(m_CubeTexture, { -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f));
-	irene::Renderer3D::DrawCube(m_CubeTexture, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));
-	irene::Renderer3D::DrawPlane(m_PlaneTexture, { 0.0f, -0.5001f, 0.0f }, 1.5708f, { 1.0f, 0.0f, 0.0f }, glm::vec3(8.0f), 2.0f);
+	irene::Renderer3D::DrawCube({ -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f), m_CubeTexture);
+	irene::Renderer3D::DrawCube({ 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f), m_CubeTexture);
+	irene::Renderer3D::DrawPlane({ 0.0f, -0.5001f, 0.0f }, glm::vec3(8.0f), 1.5708f, { 1.0f, 0.0f, 0.0f }, m_PlaneTexture, 2.0f);
 
 	m_Framebuffer->Unbind();
 	glDisable(GL_DEPTH_TEST);
@@ -81,17 +81,15 @@ void FramebufferLayer::OnUpdate(irene::Timestep ts)
 
 void FramebufferLayer::OnImGuiRender()
 {
-	ImGui::Begin("Settings");
+	ImGui::Begin("Framebuffer");
 	uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-	ImGui::Image((void*)textureID, ImVec2{ 320.0f, 180.0f }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+	irene::Application::Get().GetImGuiLayer()->BlockEvents(!ImGui::IsWindowFocused() || !ImGui::IsWindowHovered());
+	ImVec2 viewportPannelSize = ImGui::GetContentRegionAvail();
+	ImGui::Image((void*)textureID, ImVec2{ viewportPannelSize.x, viewportPannelSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 	ImGui::End();
 }
 
 void FramebufferLayer::OnEvent(irene::Event& e)
 {
-	irene::WindowResizeEvent* resizeEvent = dynamic_cast<irene::WindowResizeEvent*>(&e);
-	if (resizeEvent)
-		m_Framebuffer->Resize(resizeEvent->GetWidth(), resizeEvent->GetHeight());
-
 	m_CameraController.OnEvent(e);
 }

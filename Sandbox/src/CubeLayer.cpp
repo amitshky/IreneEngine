@@ -39,9 +39,9 @@ void CubeLayer::OnUpdate(irene::Timestep ts)
 
 	m_CameraController.OnUpdate(ts);
 	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
-	irene::Renderer3D::DrawCube(m_DiffuseMap, m_SpecularMap, lightData, { 0.0f, 0.0f, 0.0f }, glm::vec3(1.0f)); // Cube with lighting
-	irene::Renderer3D::DrawCube(m_DiffuseMap, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));	// cube with only texture
-	irene::Renderer3D::DrawCube(m_LightColor * m_LightIntensity, m_LightPos, glm::vec3(0.2f));	// lamp
+	irene::Renderer3D::DrawCube({ 0.0f, 0.0f, 0.0f }, glm::vec3(1.0f), m_DiffuseMap, m_SpecularMap, lightData); // Cube with lighting
+	irene::Renderer3D::DrawCube({ 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f), m_DiffuseMap);	// cube with only texture
+	irene::Renderer3D::DrawCube(m_LightPos, glm::vec3(0.2f), m_LightColor * m_LightIntensity);	// lamp
 
 	irene::Renderer3D::EndScene();
 }

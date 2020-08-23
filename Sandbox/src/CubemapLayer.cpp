@@ -97,7 +97,7 @@ void CubemapLayer::OnUpdate(irene::Timestep ts)
 
 	m_CameraController.OnUpdate(ts);
 	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
-	irene::Renderer3D::DrawCube(m_CubeTexture, { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f });
+	irene::Renderer3D::DrawCube({ 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f }, m_CubeTexture);
 	irene::Renderer3D::EndScene();
 
 	

@@ -66,7 +66,7 @@ void NanosuitLayer::OnUpdate(irene::Timestep ts)
 
 	irene::Renderer3D::BeginScene(m_CameraController.GetCamera());
 	// Lamp
-	irene::Renderer3D::DrawCube(m_LightColor * m_LightIntensity, m_LightPos, glm::vec3(0.2f));
+	irene::Renderer3D::DrawCube(m_LightPos, glm::vec3(0.2f), m_LightColor * m_LightIntensity);
 	irene::Renderer3D::EndScene();
 }
 
