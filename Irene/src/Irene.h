@@ -9,8 +9,13 @@
 #include "Irene/Core/Input.h"
 #include "Irene/Core/KeyCodes.h"
 #include "Irene/Core/MouseButtonCodes.h"
+#include "Irene/Renderer/CameraController.h"
 
 #include "Irene/ImGui/ImGuiLayer.h"
+
+#include "Irene/Scene/Scene.h"
+#include "Irene/Scene/Entity.h"
+#include "Irene/Scene/Components.h"
 
 // ----Renderer--------------
 #include "Irene/Renderer/Renderer.h"
@@ -27,6 +32,5 @@
 #include "Irene/Renderer/Model.h"
 
 #include "Irene/Renderer/Camera.h"
-#include "Irene/Renderer/CameraController.h"
 // ---------------------------
 

@@ -145,41 +145,32 @@ namespace irene {
 	{
 	}
 
-	void Renderer3D::DrawPlane(const glm::vec4& color, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
+	void Renderer3D::DrawPlane(const glm::mat4& transform, const glm::vec4& color)
 	{
 		const float textureTile = 1.0f;
 
 		s_Data.TextureShader->Bind();
 		s_Data.PlaneVertexArray->Bind();
 		s_Data.WhiteTexture->Bind();
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
-			* glm::scale(glm::mat4(1.0f), scale);
 
-		s_Data.TextureShader->SetMat4("u_Model", model);
+		s_Data.TextureShader->SetMat4("u_Model", transform);
 		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
 		s_Data.TextureShader->SetFloat4("u_Color", color);
-		
+
 		RenderCommand::Draw(6);
 		s_Data.PlaneVertexArray->Unbind();
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawPlane(const Ref<Texture2D>& texture, const glm::vec3& position, float rotation, const glm::vec3& rotationAxis,
-		const glm::vec3& scale, float textureTile)
+	void Renderer3D::DrawPlane(const glm::mat4& transform, const Ref<Texture2D>& texture, float textureTile)
 	{
 		const glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		s_Data.TextureShader->Bind();
 		s_Data.PlaneVertexArray->Bind();
 		texture->Bind();
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
-			* glm::scale(glm::mat4(1.0f), scale);
 
-		s_Data.TextureShader->SetMat4("u_Model", model);
+		s_Data.TextureShader->SetMat4("u_Model", transform);
 		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
 		s_Data.TextureShader->SetFloat4("u_Color", color);
 
@@ -188,8 +179,7 @@ namespace irene {
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawPlane(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
-		const glm::vec3& position, float rotation, const glm::vec3& rotationAxis, const glm::vec3& scale)
+	void Renderer3D::DrawPlane(const glm::mat4& transform, const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData)
 	{
 		s_Data.LightingShader->Bind();
 		s_Data.PlaneVertexArray->Bind();
@@ -206,31 +196,50 @@ namespace irene {
 		s_Data.LightingShader->SetFloat("u_Light.quadratic", lightData.QuadraticAttenuation);
 
 		s_Data.LightingShader->SetFloat("u_Material.shininess", 64.0f);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
-			* glm::scale(glm::mat4(1.0f), scale);
-		s_Data.LightingShader->SetMat4("u_Model", model);
+		s_Data.LightingShader->SetMat4("u_Model", transform);
 
 		RenderCommand::Draw(6);
 		s_Data.PlaneVertexArray->Unbind();
 		s_Data.LightingShader->Unbind();
 	}
 
+	void Renderer3D::DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation, const glm::vec3& rotationAxis, const glm::vec4& color)
+	{
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+						* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
+						* glm::scale(glm::mat4(1.0f), scale);
+		DrawPlane(model, color);
+	}
 
-	void Renderer3D::DrawCube(const glm::vec4& color, const glm::vec3& position, const glm::vec3& scale)
+	void Renderer3D::DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation, const glm::vec3& rotationAxis, 
+		const Ref<Texture2D>& texture, float textureTile)
+	{
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+						* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
+						* glm::scale(glm::mat4(1.0f), scale);
+		DrawPlane(model, texture, textureTile);
+	}
+
+	void Renderer3D::DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation, const glm::vec3& rotationAxis,
+		const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData)
+	{
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+						* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
+						* glm::scale(glm::mat4(1.0f), scale);
+		DrawPlane(model, diffuseTex, specularTex, lightData);
+	}
+
+	///////////////////////////////////
+	
+	void Renderer3D::DrawCube(const glm::mat4& transform, const glm::vec4& color)
 	{
 		const float textureTile = 1.0f;
 
 		s_Data.TextureShader->Bind();
 		s_Data.CubeVertexArray->Bind();
 		s_Data.WhiteTexture->Bind();
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), scale);
 
-		s_Data.TextureShader->SetMat4("u_Model", model);
+		s_Data.TextureShader->SetMat4("u_Model", transform);
 		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
 		s_Data.TextureShader->SetFloat4("u_Color", color);
 
@@ -239,18 +248,15 @@ namespace irene {
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawCube(const Ref<Texture2D>& texture, const glm::vec3& position, const glm::vec3& scale, float textureTile)
+	void Renderer3D::DrawCube(const glm::mat4& transform, const Ref<Texture2D>& texture, float textureTile)
 	{
 		const glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		s_Data.TextureShader->Bind();
 		s_Data.CubeVertexArray->Bind();
 		texture->Bind();
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(glm::mat4(1.0f), position) 
-			* glm::scale(glm::mat4(1.0f), scale);
 
-		s_Data.TextureShader->SetMat4("u_Model", model);
+		s_Data.TextureShader->SetMat4("u_Model", transform);
 		s_Data.TextureShader->SetFloat("u_Tile", textureTile);
 		s_Data.TextureShader->SetFloat4("u_Color", color);
 
@@ -259,8 +265,7 @@ namespace irene {
 		s_Data.TextureShader->Unbind();
 	}
 
-	void Renderer3D::DrawCube(const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData,
-		const glm::vec3& position, const glm::vec3& scale)
+	void Renderer3D::DrawCube(const glm::mat4& transform, const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData)
 	{
 		s_Data.LightingShader->Bind();
 		s_Data.CubeVertexArray->Bind();
@@ -277,15 +282,36 @@ namespace irene {
 		s_Data.LightingShader->SetFloat("u_Light.quadratic", lightData.QuadraticAttenuation);
 
 		s_Data.LightingShader->SetFloat("u_Material.shininess", 64.0f);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), scale);
-		s_Data.LightingShader->SetMat4("u_Model", model);
+		s_Data.LightingShader->SetMat4("u_Model", transform);
 
 		RenderCommand::Draw(36);
 		s_Data.CubeVertexArray->Unbind();
 		s_Data.LightingShader->Unbind();
+	}
+
+	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& scale, const glm::vec4& color)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(glm::mat4(1.0f), position)
+			  * glm::scale(glm::mat4(1.0f), scale);
+		DrawCube(model, color);
+	}
+
+	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& scale, const Ref<Texture2D>& texture, float textureTile)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(glm::mat4(1.0f), position)
+			  * glm::scale(glm::mat4(1.0f), scale);
+		DrawCube(model, texture, textureTile);
+	}
+
+	void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& scale, const Ref<Texture2D>& diffuseTex, 
+		const Ref<Texture2D>& specularTex, const LightData& lightData)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(glm::mat4(1.0f), position)
+			  * glm::scale(glm::mat4(1.0f), scale);
+		DrawCube(model, diffuseTex, specularTex, lightData);
 	}
 
 }

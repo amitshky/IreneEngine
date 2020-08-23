@@ -4,7 +4,7 @@
 //#include "NanosuitLayer.h"
 //#include "CubeLayer.h"
 //#include "BlendingTestLayer.h"
-#include "FramebufferLayer.h"
+//#include "FramebufferLayer.h"
 #include "CubemapLayer.h"
 
 class Sandbox : public irene::Application

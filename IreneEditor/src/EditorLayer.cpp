@@ -59,10 +59,10 @@ namespace irene {
 			 1.0f, -1.0f,  1.0f
 		};
 
-		m_SkyboxVA = irene::VertexArray::Create();
-		m_SkyboxVB = irene::VertexBuffer::Create(skyboxVertices, sizeof(skyboxVertices));
+		m_SkyboxVA = VertexArray::Create();
+		m_SkyboxVB = VertexBuffer::Create(skyboxVertices, sizeof(skyboxVertices));
 		m_SkyboxVB->SetLayout({
-			{ irene::ShaderDataType::Float3, "a_Position" }
+			{ ShaderDataType::Float3, "a_Position" }
 		});
 		m_SkyboxVA->AddVertexBuffer(m_SkyboxVB);
 
@@ -99,17 +99,24 @@ namespace irene {
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
+		if(m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f)
+		{
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
+
+		if (m_ViewportFocused/* && m_ViewportHovered*/)
+			m_CameraController.OnUpdate(ts);
+
 		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
-		if (m_ViewportFocused && m_ViewportHovered)
-			m_CameraController.OnUpdate(ts);
 		
 		Renderer3D::BeginScene(m_CameraController.GetCamera());
-		Renderer3D::DrawCube(m_CubeTexture, { -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f));
-		Renderer3D::DrawCube(m_CubeTexture, { 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f));
-		Renderer3D::DrawPlane(m_PlaneTexture, { 0.0f, -0.5001f, 0.0f }, glm::radians(-90.0f), { 1.0f, 0.0f, 0.0f }, glm::vec3(8.0f), 2.0f);
+		Renderer3D::DrawCube({ -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f), m_CubeTexture);
+		Renderer3D::DrawCube({ 2.0f, 0.0f, 0.0f }, glm::vec3(1.0f), m_CubeTexture);
+		Renderer3D::DrawPlane({ 0.0f, -0.5001f, 0.0f }, glm::vec3(8.0f), glm::radians(-90.0f), { 1.0f, 0.0f, 0.0f }, m_PlaneTexture, 2.0f);
 		Renderer3D::EndScene();
 
 
@@ -122,7 +129,7 @@ namespace irene {
 		m_SkyboxShader->SetMat4("u_ViewProjection", viewProj);
 		m_SkyboxVA->Bind();
 		m_CubemapTexture->Bind(5);
-		irene::RenderCommand::Draw(36);
+		RenderCommand::Draw(36);
 		glDepthFunc(GL_LESS);
 		
 		m_Framebuffer->Unbind();
@@ -178,11 +185,8 @@ namespace irene {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
-				// which we can't undo at the moment without finer window depth/z control.
-				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
-
-				if (ImGui::MenuItem("Exit")) Application::Get().Close();
+				if (ImGui::MenuItem("Exit")) 
+					Application::Get().Close();
 				ImGui::EndMenu();
 			}
 
@@ -197,17 +201,12 @@ namespace irene {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5) && m_ViewportHovered)
-			ImGui::SetWindowFocus();
+			ImGui::SetWindowFocus("Viewport");
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
-		ImVec2 viewportPannelSize = ImGui::GetContentRegionAvail();
-		if (m_ViewportSize != (*(glm::vec2*)&viewportPannelSize) && viewportPannelSize.x > 0 && viewportPannelSize.y > 0)
-		{
-			m_Framebuffer->Resize((uint32_t)viewportPannelSize.x, (uint32_t)viewportPannelSize.y);
-			m_ViewportSize = { viewportPannelSize.x, viewportPannelSize.y };
-			m_CameraController.OnResize(viewportPannelSize.x, viewportPannelSize.y);
-		}
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
