@@ -8,6 +8,7 @@ namespace irene {
 	struct ShaderProgramSource
 	{
 		std::string VertexSource;
+		std::string GeometrySource;
 		std::string FragmentSource;
 	};
 
