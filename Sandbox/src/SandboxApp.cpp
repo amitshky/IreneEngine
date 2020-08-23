@@ -1,22 +1,14 @@
 #include <Irene.h>
 #include <Irene/Core/EntryPoint.h>
 
-//#include "NanosuitLayer.h"
-//#include "CubeLayer.h"
-//#include "BlendingTestLayer.h"
-//#include "FramebufferLayer.h"
-#include "CubemapLayer.h"
+#include "SandboxLayer.h"
 
 class Sandbox : public irene::Application
 {
 public:
 	Sandbox()
 	{
-		//PushLayer(new NanosuitLayer());
-		//PushLayer(new CubeLayer());
-		//PushLayer(new BlendingTestLayer());
-		//PushLayer(new FramebufferLayer());
-		PushLayer(new CubemapLayer());
+		PushLayer(new SandboxLayer());
 	}
 	~Sandbox() {}
 

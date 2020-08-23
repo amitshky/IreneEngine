@@ -19,7 +19,7 @@ namespace irene {
 		virtual void OnDetach() override;
 
 		virtual void OnUpdate(Timestep ts) override;
-		virtual virtual void OnImGuiRender() override;
+		virtual void OnImGuiRender() override;
 		virtual void OnEvent(Event& e) override;
 
 	private:

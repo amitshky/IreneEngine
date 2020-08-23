@@ -72,7 +72,7 @@ namespace irene {
 		m_SkyboxVB->Unbind();
 		m_SkyboxShader->Unbind();
 
-		std::vector<std::string> faces =
+		std::vector<std::string> cubemapPath =
 		{
 			"assets/textures/skybox/right.jpg",
 			"assets/textures/skybox/left.jpg",
@@ -81,7 +81,7 @@ namespace irene {
 			"assets/textures/skybox/front.jpg",
 			"assets/textures/skybox/back.jpg"
 		};
-		m_CubemapTexture = Texture2D::Create(faces);
+		m_CubemapTexture = Texture2D::Create(cubemapPath);
 
 		m_CubeTexture = Texture2D::Create("assets/textures/container.jpg");
 		m_PlaneTexture = Texture2D::Create("assets/textures/wall.jpg");
