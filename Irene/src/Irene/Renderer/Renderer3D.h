@@ -37,10 +37,10 @@ namespace irene {
 		static void DrawPlane(const glm::mat4& transform, const Ref<Texture2D>& texture, float textureTile = 1.0f);
 		static void DrawPlane(const glm::mat4& transform, const Ref<Texture2D>& diffuseTex, const Ref<Texture2D>& specularTex, const LightData& lightData);
 
-		static void DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation,
+		static void DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation, 
 			const glm::vec3& rotationAxis, const glm::vec4& color);
 
-		static void DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation,
+		static void DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation, 
 			const glm::vec3& rotationAxis, const Ref<Texture2D>& texture, float textureTile = 1.0f);
 
 		static void DrawPlane(const glm::vec3& position, const glm::vec3& scale, float rotation, const glm::vec3& rotationAxis,

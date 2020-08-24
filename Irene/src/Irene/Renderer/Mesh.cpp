@@ -30,11 +30,11 @@ namespace irene {
 	void Mesh::Draw(Ref<Shader>& shader, const glm::mat4& model)
 	{
 		// bind appropriate textures
-		unsigned int diffuseNr = 1;
-		unsigned int specularNr = 1;
-		unsigned int normalNr = 1;
-		unsigned int heightNr = 1;
-		for (unsigned int i = 0; i < m_Textures.size(); i++)
+		uint32_t diffuseNr = 1;
+		uint32_t specularNr = 1;
+		uint32_t normalNr = 1;
+		uint32_t heightNr = 1;
+		for (uint32_t i = 0; i < m_Textures.size(); i++)
 		{
 			// retrieve texture number (the N in diffuse_textureN)
 			std::string number;
@@ -42,11 +42,11 @@ namespace irene {
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
 			else if (name == "texture_specular")
-				number = std::to_string(specularNr++); // transfer unsigned int to stream
+				number = std::to_string(specularNr++); // transfer uint32_t to stream
 			else if (name == "texture_normal")
-				number = std::to_string(normalNr++); // transfer unsigned int to stream
+				number = std::to_string(normalNr++); // transfer uint32_t to stream
 			else if (name == "texture_height")
-				number = std::to_string(heightNr++); // transfer unsigned int to stream
+				number = std::to_string(heightNr++); // transfer uint32_t to stream
 
 			shader->SetInt((name + number).c_str(), i);
 			m_Textures[i]->Bind(i);

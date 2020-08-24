@@ -27,6 +27,11 @@ namespace irene {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	void OpenGLRendererAPI::DepthFunc(uint32_t glEnum)
+	{
+		glDepthFunc(glEnum);
+	}
+
 	void OpenGLRendererAPI::Draw(uint32_t count)
 	{
 		glDrawArrays(GL_TRIANGLES, 0, count);

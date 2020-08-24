@@ -98,7 +98,7 @@ namespace irene {
 			}
 		});
 
-		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)	//KeyTypedEvent for ImGui
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, uint32_t keycode)	//KeyTypedEvent for ImGui
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			KeyTypedEvent event(keycode);

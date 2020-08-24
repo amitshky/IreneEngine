@@ -21,6 +21,11 @@ namespace irene {
 			m_Meshes[i].Draw(shader, model);
 	}
 
+	Ref<Model> Model::Create(const std::string& path, bool gamma)
+	{
+		return CreateRef<Model>(path, gamma);
+	}
+
 	void Model::LoadModel(const std::string& path)
 	{
 		Assimp::Importer importer;

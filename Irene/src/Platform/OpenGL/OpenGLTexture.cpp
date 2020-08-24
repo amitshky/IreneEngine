@@ -111,8 +111,8 @@ namespace irene {
 	{
 		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_RendererID);
 		int width, height, channels;
-		m_InternalFormat = GL_RGB8;
-		m_DataFormat = GL_RGB;
+		m_InternalFormat = GL_RGBA8;
+		m_DataFormat = GL_RGBA;
 		for (uint32_t i = 0; i < cubeFaces.size(); i++)
 		{
 			stbi_uc* data = stbi_load(cubeFaces[i].c_str(), &width, &height, &channels, 0);
@@ -136,7 +136,7 @@ namespace irene {
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
-		unsigned int bpp = m_DataFormat == GL_RGBA ? 4 : 3;
+		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
 		CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 	}

@@ -5,21 +5,21 @@
 
 namespace irene {
 
-	class Sandbox : public Application
+	class EditorApp : public Application
 	{
 	public:
-		Sandbox()
+		EditorApp()
 			: Application("Irene Editor App")
 		{
 			PushLayer(new EditorLayer());
 		}
-		~Sandbox() {}
+		~EditorApp() {}
 
 	};
 
 	Application* CreateApplication()
 	{
-		return new Sandbox();
+		return new EditorApp();
 	}
 
 }

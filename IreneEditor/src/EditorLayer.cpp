@@ -4,7 +4,7 @@
 namespace irene {
 
 	EditorLayer::EditorLayer()
-		: Layer("Framebuffer Test"), m_CameraController(16.0f / 9.0f)
+		: Layer("Editor Layer"), m_CameraController(16.0f / 9.0f)
 	{
 	}
 
@@ -74,12 +74,12 @@ namespace irene {
 
 		std::vector<std::string> cubemapPath =
 		{
-			"assets/textures/skybox/right.jpg",
-			"assets/textures/skybox/left.jpg",
-			"assets/textures/skybox/top.jpg",
-			"assets/textures/skybox/bottom.jpg",
-			"assets/textures/skybox/front.jpg",
-			"assets/textures/skybox/back.jpg"
+			"assets/textures/space/right.png",
+			"assets/textures/space/left.png",
+			"assets/textures/space/top.png",
+			"assets/textures/space/bottom.png",
+			"assets/textures/space/front.png",
+			"assets/textures/space/back.png"
 		};
 		m_CubemapTexture = Texture2D::Create(cubemapPath);
 
@@ -124,13 +124,13 @@ namespace irene {
 		glm::mat4 view = glm::mat4(glm::mat3(m_CameraController.GetCamera().GetViewMatrix()));
 		glm::mat4 proj = m_CameraController.GetCamera().GetProjectionMatrix();
 		glm::mat4 viewProj = proj * view;
-		glDepthFunc(GL_LEQUAL);
+		RenderCommand::DepthFunc(GL_LEQUAL);
 		m_SkyboxShader->Bind();
 		m_SkyboxShader->SetMat4("u_ViewProjection", viewProj);
 		m_SkyboxVA->Bind();
 		m_CubemapTexture->Bind(5);
 		RenderCommand::Draw(36);
-		glDepthFunc(GL_LESS);
+		RenderCommand::DepthFunc(GL_LESS);
 		
 		m_Framebuffer->Unbind();
 	}

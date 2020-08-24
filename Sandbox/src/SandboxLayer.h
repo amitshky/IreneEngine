@@ -22,6 +22,6 @@ public:
 private:
 	irene::CameraController m_CameraController;
 
-	irene::Ref<irene::Texture2D> m_CubeTexture;
-	glm::vec3 m_Position = glm::vec3( 0.0f, 0.0f, 0.0f );
+	irene::Ref<irene::Shader> m_NanosuitShader;
+	irene::Ref<irene::Model> m_NanosuitModel;
 };

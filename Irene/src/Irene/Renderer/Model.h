@@ -16,6 +16,8 @@ namespace irene {
 		~Model() {}
 		void Draw(Ref<Shader>& shader, const glm::mat4& model);
 
+		static Ref<Model> Create(const std::string& path, bool gamma = false);
+
 	private:
 		std::vector<Ref<Texture2D>> loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 		void LoadModel(const std::string& path);
