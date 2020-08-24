@@ -23,6 +23,7 @@ namespace irene {
 
 		virtual void Draw(const Ref<VertexArray>& vertexArray) = 0;	// Draw elements
 		virtual void Draw(uint32_t count) = 0;	// Draw elements
+		virtual void DrawInstanced(uint32_t first, uint32_t count, uint32_t instanceCount) = 0;
 
 		inline static API GetAPI() { return s_API; }
 

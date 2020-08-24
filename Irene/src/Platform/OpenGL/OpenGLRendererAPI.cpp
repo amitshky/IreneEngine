@@ -37,6 +37,11 @@ namespace irene {
 		glDrawArrays(GL_TRIANGLES, 0, count);
 	}
 
+	void OpenGLRendererAPI::DrawInstanced(uint32_t first, uint32_t count, uint32_t instanceCount)
+	{
+		glDrawArraysInstanced(GL_TRIANGLES, first, count, instanceCount);
+	}
+
 	void OpenGLRendererAPI::Draw(const Ref<VertexArray>& vertexArray)
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);

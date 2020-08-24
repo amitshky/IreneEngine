@@ -15,6 +15,7 @@ namespace irene {
 
 		virtual void Draw(const Ref<VertexArray>& vertexArray) override;	// Draw elements
 		virtual void Draw(uint32_t count) override;	// Draw elements
+		virtual void DrawInstanced(uint32_t first, uint32_t count, uint32_t instanceCount) override;
 	};
 
 }
