@@ -111,7 +111,6 @@ namespace irene {
 		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
-
 		
 		Renderer3D::BeginScene(m_CameraController.GetCamera());
 		Renderer3D::DrawCube({ -1.0f, 0.0f, -1.0f }, glm::vec3(1.0f), m_CubeTexture);
@@ -132,6 +131,7 @@ namespace irene {
 		RenderCommand::Draw(36);
 		RenderCommand::DepthFunc(GL_LESS);
 		
+		m_Framebuffer->Blit();
 		m_Framebuffer->Unbind();
 	}
 
@@ -200,15 +200,19 @@ namespace irene {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+		
 		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5) && m_ViewportHovered)
 			ImGui::SetWindowFocus("Viewport");
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+		
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		
 		ImGui::End();
 		ImGui::PopStyleVar();
 

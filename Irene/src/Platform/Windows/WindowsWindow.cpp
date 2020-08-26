@@ -43,7 +43,7 @@ namespace irene {
 			glfwSetErrorCallback(s_GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
-
+		glfwWindowHint(GLFW_SAMPLES, 4);	// for Multisample Anti-aliasing (MSAA)
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();

@@ -22,9 +22,5 @@ public:
 private:
 	irene::CameraController m_CameraController;
 
-	glm::vec2 m_Translations[100];
-
-	irene::Ref<irene::VertexArray> m_VA;
-	irene::Ref<irene::VertexBuffer> m_VB;
-	irene::Ref<irene::Shader> m_Shader;
 };
+
