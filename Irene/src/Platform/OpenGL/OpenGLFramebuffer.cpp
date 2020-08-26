@@ -16,8 +16,10 @@ namespace irene {
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &m_RendererID);
+		glDeleteFramebuffers(1, &m_IntRendererID);
 		glDeleteTextures(1, &m_ColorAttachment);
 		glDeleteTextures(1, &m_DepthAttachment);
+		glDeleteTextures(1, &m_ScreenTextureID);
 	}
 
 	void OpenGLFramebuffer::Invalidate()
@@ -25,8 +27,10 @@ namespace irene {
 		if (m_RendererID)
 		{
 			glDeleteFramebuffers(1, &m_RendererID);
+			glDeleteFramebuffers(1, &m_IntRendererID);
 			glDeleteTextures(1, &m_ColorAttachment);
 			glDeleteTextures(1, &m_DepthAttachment);
+			glDeleteTextures(1, &m_ScreenTextureID);
 		}
 
 		glCreateFramebuffers(1, &m_RendererID);
