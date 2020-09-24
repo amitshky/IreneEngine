@@ -10,6 +10,7 @@ namespace irene {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_MULTISAMPLE);	// for Multisample Anti-aliasing (MSAA)
 	}
 
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
@@ -27,9 +28,19 @@ namespace irene {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	void OpenGLRendererAPI::DepthFunc(uint32_t glEnum)
+	{
+		glDepthFunc(glEnum);
+	}
+
 	void OpenGLRendererAPI::Draw(uint32_t count)
 	{
 		glDrawArrays(GL_TRIANGLES, 0, count);
+	}
+
+	void OpenGLRendererAPI::DrawInstanced(uint32_t first, uint32_t count, uint32_t instanceCount)
+	{
+		glDrawArraysInstanced(GL_TRIANGLES, first, count, instanceCount);
 	}
 
 	void OpenGLRendererAPI::Draw(const Ref<VertexArray>& vertexArray)

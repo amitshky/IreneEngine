@@ -19,9 +19,11 @@ namespace irene {
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 		virtual void Clear() = 0;
+		virtual void DepthFunc(uint32_t glEnum) = 0;
 
 		virtual void Draw(const Ref<VertexArray>& vertexArray) = 0;	// Draw elements
 		virtual void Draw(uint32_t count) = 0;	// Draw elements
+		virtual void DrawInstanced(uint32_t first, uint32_t count, uint32_t instanceCount) = 0;
 
 		inline static API GetAPI() { return s_API; }
 

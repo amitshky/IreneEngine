@@ -39,5 +39,16 @@ namespace irene {
 		return nullptr;
 	}
 
+	Ref<Texture2D> Texture2D::Create(const std::vector<std::string>& cubeFaces)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLTexture2D>(cubeFaces);
+		}
+		CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
 }
 

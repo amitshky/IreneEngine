@@ -16,7 +16,7 @@ namespace irene {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Irene Engine");
 		virtual ~Application();
 
 		void Run();
@@ -24,6 +24,10 @@ namespace irene {
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
+
+		void Close();
+
+		ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }

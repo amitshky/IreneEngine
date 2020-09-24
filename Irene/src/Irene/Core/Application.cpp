@@ -10,12 +10,12 @@ namespace irene {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
 		CORE_ASSERT(!s_Instance, "Application already exists");
 		s_Instance = this;
 
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = std::unique_ptr<Window>(Window::Create(WindowProps(name)));
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
@@ -60,9 +60,9 @@ namespace irene {
 
 		for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)	// going backwards
 		{
-			(*it)->OnEvent(e);
 			if (e.Handled)
 				break;
+			(*it)->OnEvent(e);
 		}
 	}
 
@@ -76,6 +76,11 @@ namespace irene {
 	{
 		m_LayerStack.PushOverlay(overlay);
 		overlay->OnAttach();
+	}
+
+	void Application::Close()
+	{
+		m_Running = false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

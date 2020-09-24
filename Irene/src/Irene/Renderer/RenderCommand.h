@@ -29,6 +29,16 @@ namespace irene {
 			s_RendererAPI->Draw(count);
 		}
 
+		inline static void DrawInstanced(uint32_t first, uint32_t count, uint32_t instanceCount)
+		{
+			s_RendererAPI->DrawInstanced(first, count, instanceCount);
+		}
+
+		inline static void DepthFunc(uint32_t glEnum)
+		{
+			s_RendererAPI->DepthFunc(glEnum);
+		}
+
 	private:
 		static Scope<RendererAPI> s_RendererAPI;
 	};

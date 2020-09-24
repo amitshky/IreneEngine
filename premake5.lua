@@ -1,7 +1,7 @@
 workspace "Irene"
 	
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Editor"
 
 	configurations
 	{
@@ -25,6 +25,7 @@ IncludeDir["ImGui"] = "Irene/vendor/imgui"
 IncludeDir["glm"] = "Irene/vendor/glm"
 IncludeDir["stb_image"] = "Irene/vendor/stb_image"
 IncludeDir["assimp"] = "Irene/vendor/assimp/include"
+IncludeDir["Entt"] = "Irene/vendor/Entt/include"
 
 group "Dependencies"
 	include "Irene/vendor/GLFW"
@@ -75,7 +76,8 @@ project "Irene"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.assimp}"
+		"%{IncludeDir.assimp}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links
@@ -139,7 +141,67 @@ project "Sandbox"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.assimp}",
 		"Irene/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
+	}
+
+	links
+	{
+		"Irene"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+		defines
+		{
+			"PLATFORM_WINDOWS"
+		}
+
+		filter "configurations:Debug"
+			defines "DEBUG"
+			runtime "Debug"
+			symbols "on"
+		
+		filter "configurations:Release"
+			defines "RELEASE"
+			runtime "Release"
+			optimize "on"
+			
+		filter "configurations:Dist"
+			defines "DIST"
+			runtime "Release"
+			optimize "on"
+
+
+project "IreneEditor"
+	location "IreneEditor"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir("bin/" ..outputdir.. "/%{prj.name}")
+	objdir("bin-int/" ..outputdir.. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp",
+	}
+
+	excludes "%{prj.name}/src/Example.cpp"
+
+	includedirs
+	{
+		"Irene/src",
+		"Irene/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.assimp}",
+		"Irene/vendor",
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.Entt}"
 	}
 
 	links

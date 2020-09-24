@@ -19,6 +19,7 @@ namespace irene {
 		virtual void SetInt(const std::string& name, int value) override;
 		virtual void SetIntArray(const std::string& name, int* values, uint32_t count) override;
 		virtual void SetFloat(const std::string& name, float value) override;
+		virtual void SetFloat2(const std::string& name, const glm::vec2& value)override;
 		virtual void SetFloat3(const std::string& name, const glm::vec3& value)override;
 		virtual void SetFloat4(const std::string& name, const glm::vec4& value) override;
 		virtual void SetMat4(const std::string& name, const glm::mat4& value) override;
@@ -36,14 +37,14 @@ namespace irene {
 
 	private:
 		ShaderProgramSource ParseShader(const std::string& filepath);
-		unsigned int CompileShader(unsigned int type, const std::string& source);
-		unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+		uint32_t CompileShader(uint32_t type, const std::string& source);
+		uint32_t CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 
 		int GetUniformLocation(const std::string& name);
 
 	private:
 		std::string m_Filepath;
-		unsigned int m_RendererID;	// ID of the shaderProgram
+		uint32_t m_RendererID;	// ID of the shaderProgram
 		std::unordered_map<std::string, int> m_UniformLocationCache;
 	};
 

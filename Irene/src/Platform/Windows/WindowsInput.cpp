@@ -1,42 +1,40 @@
 #include "pch.h"
-#include "WindowsInput.h"
+#include "Irene/Core/Input.h"
 
 #include <GLFW/glfw3.h>
 #include "Irene/Core/Application.h"
 
 namespace irene {
 
-	Scope<Input> Input::s_Instance = CreateScope<WindowsInput>();
-
-	bool WindowsInput::IsKeyPressedImpl(int keycode)
+	bool Input::IsKeyPressed(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsKeyReleasedImpl(int keycode)
+	bool Input::IsKeyReleased(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetKey(window, keycode);
 		return state == GLFW_RELEASE;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS;
 	}
 
-	bool WindowsInput::IsMouseButtonReleasedImpl(int button)
+	bool Input::IsMouseButtonReleased(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_RELEASE;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePositionImpl()
+	std::pair<float, float> Input::GetMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xpos, ypos;
@@ -44,15 +42,15 @@ namespace irene {
 		return { (float)xpos, (float)ypos };
 	}
 
-	float WindowsInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return y;
 	}
 

@@ -48,9 +48,9 @@ namespace irene {
 		return { ss[0].str(), ss[1].str() };
 	}
 
-	unsigned int OpenGLShader::CompileShader(unsigned int type, const std::string& source)
+	uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
 	{
-		unsigned int id = glCreateShader(type);	// Creates an empty shader object and returns a non-zero value to be referenced
+		uint32_t id = glCreateShader(type);	// Creates an empty shader object and returns a non-zero value to be referenced
 		const char* src = source.c_str();	// returns a pointer to the begining of our data
 		glShaderSource(id, 1, &src, nullptr);	//Sets the source code in the shader to the source code in the array of strings
 		glCompileShader(id);
@@ -59,25 +59,28 @@ namespace irene {
 		int result;	// to check if our shader compiled properly 
 		glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE)		// if(!result)
-		{
-			// get the error message
-			char message[512];
-			glGetShaderInfoLog(id, 512, NULL, message);
-			std::cout << "Failed To Compile " << (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") << " Shader!" << std::endl;
-			std::cout << message << std::endl;
+		{GLint maxLength = 0;
+			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
+
+			std::vector<GLchar> infoLog(maxLength);
+			glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
+
 			glDeleteShader(id);
-			return 0;
+
+			CORE_ERROR("Failed To Compile {0} Shader!", (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment"));
+			CORE_ERROR("{0}", infoLog.data());
+			CORE_ASSERT(false, "Shader compilation failure!");
 		}
 
 		return id;
 	}
 
-	unsigned int OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+	uint32_t OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 	{
-		unsigned int program = glCreateProgram();	// create a shader program	// we can attach the shader object to it
+		uint32_t program = glCreateProgram();	// create a shader program	// we can attach the shader object to it
 		// compiling
-		unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-		unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+		uint32_t vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+		uint32_t fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
 		// linking
 		glAttachShader(program, vs);
@@ -127,6 +130,11 @@ namespace irene {
 	void OpenGLShader::SetFloat(const std::string& name, float value)
 	{
 		UploadUniformFloat(name, value);
+	}
+
+	void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& value)
+	{
+		UploadUniformFloat2(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)
