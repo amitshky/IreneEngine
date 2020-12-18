@@ -48,7 +48,7 @@ namespace irene {
 			else if (name == "texture_height")
 				number = std::to_string(heightNr++); // transfer uint32_t to stream
 
-			shader->SetInt((name + number).c_str(), i);
+			shader->SetInt(name + number, i);
 			m_Textures[i]->Bind(i);
 		}
 

@@ -97,19 +97,20 @@ void SandboxLayer::OnAttach()
 
 	glCreateFramebuffers(1, &m_DepthMapFBO);
 
-	glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthMap);
-	glBindTexture(GL_TEXTURE_2D, m_DepthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_ShadowWidth, m_ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_DepthCubemap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_DepthCubemap);
+	for (uint32_t i = 0; i < 6; i++)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X +  i, 0, GL_DEPTH_COMPONENT,
+			m_ShadowWidth, m_ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	// attach the depth map to framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthMap, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_DepthCubemap, 0);
 	// we are not reading or writing to the color attachment
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
@@ -117,11 +118,13 @@ void SandboxLayer::OnAttach()
 
 	m_Texture = irene::Texture2D::Create("assets/textures/wood.png");
 
-	m_Shader = irene::Shader::Create("assets/shaders/shadowMapping.shader");
-	m_SimpleDepthShader = irene::Shader::Create("assets/shaders/shadowMappingDepth.shader");
+	m_Shader = irene::Shader::Create("assets/shaders/pointShadow.shader");
+	m_CubemapDepthShader= irene::Shader::Create("assets/shaders/pointShadowDepth.shader", true);
 	m_Shader->Bind();
 	m_Shader->SetInt("u_DiffuseTex", 0);
-	m_Shader->SetInt("u_ShadowMap", 1);
+	m_Shader->SetInt("u_DepthMap", 1);
+
+	m_LightPos = glm::vec3(2.0f, 4.0f, -1.0f);
 }
 
 void SandboxLayer::OnDetach()
@@ -135,37 +138,45 @@ void SandboxLayer::OnUpdate(irene::Timestep ts)
 
 	m_CameraController.OnUpdate(ts);
 
-	float nearPlane = 1.0f, farPlane = 7.5f;
-	glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
-	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
-	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+	m_LightPos.z = std::sin(glfwGetTime() * 0.5f) * 3.0f;
+	float nearPlane = 1.0f;
+	float farPlane = 25.0f;
+	m_ShadowProj = glm::perspective(glm::radians(90.0f), (float)m_ShadowWidth / (float)m_ShadowHeight, nearPlane, farPlane);
+
+	m_ShadowTransforms[0] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
+	m_ShadowTransforms[1] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
+	m_ShadowTransforms[2] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f));
+	m_ShadowTransforms[3] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f));
+	m_ShadowTransforms[4] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f));
+	m_ShadowTransforms[5] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f));
 
 	// 1. render depth of  scene to texture
-	m_SimpleDepthShader->Bind();
-	m_SimpleDepthShader->SetMat4("u_LightSpaceMatrix", lightSpaceMatrix);
-
 	irene::RenderCommand::SetViewport(0, 0, m_ShadowWidth, m_ShadowHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
+
+	m_CubemapDepthShader->Bind();
+	for (uint32_t i = 0; i < 6; i++)
+		m_CubemapDepthShader->SetMat4("u_ShadowMatrices[" + std::to_string(i) + "]", m_ShadowTransforms[i]);
+	m_CubemapDepthShader->SetFloat("u_FarPlane", farPlane);
+	m_CubemapDepthShader->SetFloat3("u_LightPos", m_LightPos);
+
 	m_Texture->Bind();
-	RenderScene(m_SimpleDepthShader);
+	RenderScene(m_CubemapDepthShader);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	 //2. render scene as normal using generated depth map
-	
 	irene::RenderCommand::SetViewport(0, 0, m_Width, m_Height);
 	irene::RenderCommand::Clear();
 
 	m_Shader->Bind();
 	m_Shader->SetMat4("u_ViewProjection", m_CameraController.GetCamera().GetViewProjectionMatrix());
 	m_Shader->SetFloat3("u_ViewPos", m_CameraController.GetCamera().GetPosition());
-	m_Shader->SetFloat3("u_LightPos", lightPos);
-	m_Shader->SetMat4("u_LightSpaceMatrix", lightSpaceMatrix);
+	m_Shader->SetFloat3("u_LightPos", m_LightPos);
+	m_Shader->SetFloat("u_FarPlane", farPlane);
 	m_Texture->Bind();
-	glBindTextureUnit(1, m_DepthMap);
+	glBindTextureUnit(1, m_DepthCubemap);
 	RenderScene(m_Shader);
-
 }
 
 void SandboxLayer::OnImGuiRender()

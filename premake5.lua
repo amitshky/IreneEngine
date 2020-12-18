@@ -1,7 +1,7 @@
 workspace "Irene"
 	
 	architecture "x64"
-	startproject "Editor"
+	startproject "IreneEditor"
 
 	configurations
 	{

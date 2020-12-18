@@ -21,7 +21,6 @@ void main()
 	gl_Position = u_ViewProjection * vec4(FragPos, 1.0f);
 }
 
-
 #shader fragment
 #version 450 core
 

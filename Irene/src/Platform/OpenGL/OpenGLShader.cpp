@@ -5,11 +5,14 @@
 
 namespace irene {
 
-	OpenGLShader::OpenGLShader(const std::string& filepath)
+	OpenGLShader::OpenGLShader(const std::string& filepath, bool geometryShader)
 		: m_Filepath(filepath)
 	{
 		ShaderProgramSource source = ParseShader(filepath);
-		m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
+		if (geometryShader)
+			m_RendererID = CreateShader(source.VertexSource, source.GeometrySource, source.FragmentSource);
+		else
+			m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -23,11 +26,11 @@ namespace irene {
 
 		enum class ShaderType
 		{
-			NONE = -1, VERTEX = 0, FRAGMENT = 1
+			NONE = -1, VERTEX = 0, GEOMETRY = 1, FRAGMENT = 2
 		};
 
 		std::string line;
-		std::stringstream ss[2];	//stringstream array for vertex and fragment shader
+		std::stringstream ss[3];
 		ShaderType type = ShaderType::NONE;
 		while (getline(stream, line))
 		{
@@ -35,6 +38,8 @@ namespace irene {
 			{
 				if (line.find("vertex") != std::string::npos)
 					type = ShaderType::VERTEX;
+				else if (line.find("geometry") != std::string::npos)
+					type = ShaderType::GEOMETRY;
 				else if (line.find("fragment") != std::string::npos)
 					type = ShaderType::FRAGMENT;
 			}
@@ -45,7 +50,7 @@ namespace irene {
 		}
 
 		stream.close();
-		return { ss[0].str(), ss[1].str() };
+		return { ss[0].str(), ss[1].str(), ss[2].str() };
 	}
 
 	uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
@@ -67,7 +72,12 @@ namespace irene {
 
 			glDeleteShader(id);
 
-			CORE_ERROR("Failed To Compile {0} Shader!", (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment"));
+			if (type == GL_VERTEX_SHADER)
+				CORE_ERROR("Failed To Compile Vertex Shader!");
+			if (type == GL_FRAGMENT_SHADER)
+				CORE_ERROR("Failed To Compile Fragment Shader!");
+			if (type == GL_GEOMETRY_SHADER)
+				CORE_ERROR("Failed To Compile Geometry Shader!");
 			CORE_ERROR("{0}", infoLog.data());
 			CORE_ASSERT(false, "Shader compilation failure!");
 		}
@@ -90,6 +100,29 @@ namespace irene {
 
 		// delete the intermediates
 		glDeleteShader(vs);
+		glDeleteShader(fs);
+
+		return program;
+	}
+
+	uint32_t OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& geometryShader, const std::string& fragmentShader)
+	{
+		uint32_t program = glCreateProgram();	// create a shader program	// we can attach the shader object to it
+		// compiling
+		uint32_t vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+		uint32_t gs = CompileShader(GL_GEOMETRY_SHADER, geometryShader);
+		uint32_t fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+
+		// linking
+		glAttachShader(program, vs);
+		glAttachShader(program, gs);
+		glAttachShader(program, fs);
+		glLinkProgram(program);
+		glValidateProgram(program);
+
+		// delete the intermediates
+		glDeleteShader(vs);
+		glDeleteShader(gs);
 		glDeleteShader(fs);
 
 		return program;

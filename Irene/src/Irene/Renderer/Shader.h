@@ -8,6 +8,7 @@ namespace irene {
 	struct ShaderProgramSource
 	{
 		std::string VertexSource;
+		std::string GeometrySource;
 		std::string FragmentSource;
 	};
 
@@ -28,7 +29,7 @@ namespace irene {
 		virtual void SetFloat4(const std::string & name, const glm::vec4 & value) = 0;
 		virtual void SetMat4(const std::string & name, const glm::mat4 & value) = 0;
 
-		static Ref<Shader> Create(const std::string & filepath);
+		static Ref<Shader> Create(const std::string & filepath, bool geometryShader = false);
 	};
 
 }
