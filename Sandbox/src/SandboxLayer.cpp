@@ -14,117 +14,91 @@ SandboxLayer::~SandboxLayer()
 
 void SandboxLayer::OnAttach()
 {
-	float cubeVertices[] = {
-		// back face
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-		 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-		 1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
-		 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-		-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
-		// front face
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-		 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
-		 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-		 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-		-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-		// left face
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-		-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-		-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-		// right face
-		 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-		 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-		 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
-		 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-		 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-		 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
-		// bottom face
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-		 1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
-		 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-		 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-		-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-		// top face
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-		 1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-		 1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
-		 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-		-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+	// positions
+	glm::vec3 pos1(-1.0f,  1.0f, 0.0f);
+	glm::vec3 pos2(-1.0f, -1.0f, 0.0f);
+	glm::vec3 pos3( 1.0f, -1.0f, 0.0f);
+	glm::vec3 pos4( 1.0f,  1.0f, 0.0f);
+	// texture coordinates
+	glm::vec2 uv1(0.0f, 1.0f);
+	glm::vec2 uv2(0.0f, 0.0f);
+	glm::vec2 uv3(1.0f, 0.0f);  
+	glm::vec2 uv4(1.0f, 1.0f);
+	// normal vector
+	glm::vec3 nm(0.0f, 0.0f, 1.0f);
+
+	// calculate tangent/bitangent vectors of both triangles
+	glm::vec3 tangent1, bitangent1;
+	glm::vec3 tangent2, bitangent2;
+	// triangle 1
+	// ----------
+	glm::vec3 edge1 = pos2 - pos1;
+	glm::vec3 edge2 = pos3 - pos1;
+	glm::vec2 deltaUV1 = uv2 - uv1;
+	glm::vec2 deltaUV2 = uv3 - uv1;
+
+	float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+	tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+	tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+	tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+	bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+	bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+	bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+
+	// triangle 2
+	// ----------
+	edge1 = pos3 - pos1;
+	edge2 = pos4 - pos1;
+	deltaUV1 = uv3 - uv1;
+	deltaUV2 = uv4 - uv1;
+
+	f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+	tangent2.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+	tangent2.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+	tangent2.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+
+	bitangent2.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+	bitangent2.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+	bitangent2.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+
+
+	float quadVertices[] = {
+		// positions            // normal         // texcoords  // tangent                          // bitangent
+		pos1.x, pos1.y, pos1.z, nm.x, nm.y, nm.z, uv1.x, uv1.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+		pos2.x, pos2.y, pos2.z, nm.x, nm.y, nm.z, uv2.x, uv2.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+		pos3.x, pos3.y, pos3.z, nm.x, nm.y, nm.z, uv3.x, uv3.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
+
+		pos1.x, pos1.y, pos1.z, nm.x, nm.y, nm.z, uv1.x, uv1.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+		pos3.x, pos3.y, pos3.z, nm.x, nm.y, nm.z, uv3.x, uv3.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z,
+		pos4.x, pos4.y, pos4.z, nm.x, nm.y, nm.z, uv4.x, uv4.y, tangent2.x, tangent2.y, tangent2.z, bitangent2.x, bitangent2.y, bitangent2.z
 	};
 
-	float planeVertices[] = {
-		// positions            // normals         // texcoords
-		 25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
-		-25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
-		-25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,   0.0f, 25.0f,
-
-		 25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
-		-25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,   0.0f, 25.0f,
-		 25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,  25.0f, 25.0f
-	};
-
-	// Cube
-	m_CubeVA = irene::VertexArray::Create();
-	m_CubeVB = irene::VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
-	m_CubeVB->SetLayout({
+	m_VA = irene::VertexArray::Create();
+	m_VB = irene::VertexBuffer::Create(quadVertices, sizeof(quadVertices));
+	m_VB->SetLayout({
 		{irene::ShaderDataType::Float3, "a_Position"},
 		{irene::ShaderDataType::Float3, "a_Normal"},
-		{irene::ShaderDataType::Float2, "a_TexCoords"}
+		{irene::ShaderDataType::Float2, "a_TexCoords"},
+		{irene::ShaderDataType::Float3, "a_Tangent"},
+		{irene::ShaderDataType::Float3, "a_Bitangent"}
 	});
-	m_CubeVA->AddVertexBuffer(m_CubeVB);
-	m_CubeVB->Unbind();
-	m_CubeVA->Unbind();
+	m_VA->AddVertexBuffer(m_VB);
+	m_VB->Unbind();
+	m_VA->Unbind();
 
-	// Plane
-	m_PlaneVA = irene::VertexArray::Create();
-	m_PlaneVB = irene::VertexBuffer::Create(planeVertices, sizeof(planeVertices));
-	m_PlaneVB->SetLayout({
-		{irene::ShaderDataType::Float3, "a_Position"},
-		{irene::ShaderDataType::Float3, "a_Normal"},
-		{irene::ShaderDataType::Float2, "a_TexCoords"}
-	});
-	m_PlaneVA->AddVertexBuffer(m_PlaneVB);
-	m_PlaneVB->Unbind();
-	m_PlaneVA->Unbind();
+	m_Shader = irene::Shader::Create("assets/shaders/normalMap.shader");
 
-
-	glCreateFramebuffers(1, &m_DepthMapFBO);
-
-	glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_DepthCubemap);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, m_DepthCubemap);
-	for (uint32_t i = 0; i < 6; i++)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X +  i, 0, GL_DEPTH_COMPONENT,
-			m_ShadowWidth, m_ShadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	// attach the depth map to framebuffer
-	glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_DepthCubemap, 0);
-	// we are not reading or writing to the color attachment
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	m_Texture = irene::Texture2D::Create("assets/textures/wood.png");
-
-	m_Shader = irene::Shader::Create("assets/shaders/pointShadow.shader");
-	m_CubemapDepthShader= irene::Shader::Create("assets/shaders/pointShadowDepth.shader", true);
 	m_Shader->Bind();
-	m_Shader->SetInt("u_DiffuseTex", 0);
-	m_Shader->SetInt("u_DepthMap", 1);
+	m_Shader->SetInt("u_Material.diffuse", 0);
+	m_Shader->SetInt("u_Material.normal", 1);
+	m_Shader->Unbind();
 
-	m_LightPos = glm::vec3(2.0f, 4.0f, -1.0f);
+	m_DiffuseMap = irene::Texture2D::Create("assets/textures/brickwall.jpg");
+	m_NormalMap  = irene::Texture2D::Create("assets/textures/brickwall_normal.jpg");
 }
 
 void SandboxLayer::OnDetach()
@@ -138,45 +112,31 @@ void SandboxLayer::OnUpdate(irene::Timestep ts)
 
 	m_CameraController.OnUpdate(ts);
 
-	m_LightPos.z = std::sin(glfwGetTime() * 0.5f) * 3.0f;
-	float nearPlane = 1.0f;
-	float farPlane = 25.0f;
-	m_ShadowProj = glm::perspective(glm::radians(90.0f), (float)m_ShadowWidth / (float)m_ShadowHeight, nearPlane, farPlane);
+	glm::vec3 lightPos(-0.3f, 0.3f, -0.8f);
+	glm::vec3 position(0.0f, 0.0f, -1.0f);
+	glm::vec3 scale(1.0f);
+	glm::vec3 rotationAxis(1.0f, 0.0f, 0.0f);
+	constexpr float rotation = glm::radians(0.0f);
 
-	m_ShadowTransforms[0] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
-	m_ShadowTransforms[1] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f));
-	m_ShadowTransforms[2] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f));
-	m_ShadowTransforms[3] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f));
-	m_ShadowTransforms[4] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f));
-	m_ShadowTransforms[5] = m_ShadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f));
-
-	// 1. render depth of  scene to texture
-	irene::RenderCommand::SetViewport(0, 0, m_ShadowWidth, m_ShadowHeight);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_DepthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	m_CubemapDepthShader->Bind();
-	for (uint32_t i = 0; i < 6; i++)
-		m_CubemapDepthShader->SetMat4("u_ShadowMatrices[" + std::to_string(i) + "]", m_ShadowTransforms[i]);
-	m_CubemapDepthShader->SetFloat("u_FarPlane", farPlane);
-	m_CubemapDepthShader->SetFloat3("u_LightPos", m_LightPos);
-
-	m_Texture->Bind();
-	RenderScene(m_CubemapDepthShader);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	 //2. render scene as normal using generated depth map
-	irene::RenderCommand::SetViewport(0, 0, m_Width, m_Height);
-	irene::RenderCommand::Clear();
-
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+		* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
+		* glm::scale(glm::mat4(1.0f), scale);
+	glm::mat4 viewProj = m_CameraController.GetCamera().GetViewProjectionMatrix();
+	
+	m_VA->Bind();
 	m_Shader->Bind();
-	m_Shader->SetMat4("u_ViewProjection", m_CameraController.GetCamera().GetViewProjectionMatrix());
+
+	m_DiffuseMap->Bind();
+	m_NormalMap->Bind(1);
+
+	m_Shader->SetMat4("u_Model", model);
+	m_Shader->SetMat4("u_ViewProjection", viewProj);
+	m_Shader->SetFloat3("u_LightPos", lightPos);
 	m_Shader->SetFloat3("u_ViewPos", m_CameraController.GetCamera().GetPosition());
-	m_Shader->SetFloat3("u_LightPos", m_LightPos);
-	m_Shader->SetFloat("u_FarPlane", farPlane);
-	m_Texture->Bind();
-	glBindTextureUnit(1, m_DepthCubemap);
-	RenderScene(m_Shader);
+
+	irene::RenderCommand::Draw(6);
+	m_Shader->Unbind();
+	m_VA->Unbind();
 }
 
 void SandboxLayer::OnImGuiRender()
@@ -186,42 +146,5 @@ void SandboxLayer::OnImGuiRender()
 void SandboxLayer::OnEvent(irene::Event& e)
 {
 	m_CameraController.OnEvent(e);
-	irene::WindowResizeEvent* resizeEvent = dynamic_cast<irene::WindowResizeEvent*>(&e);
-	if (resizeEvent)
-	{
-		m_Width = resizeEvent->GetWidth();
-		m_Height = resizeEvent->GetHeight();
-	}
 }
 
-void SandboxLayer::RenderScene(const irene::Ref<irene::Shader>& shader)
-{
-	glm::mat4 model = glm::mat4(1.0f);
-	shader->SetMat4("u_Model", model);
-	m_PlaneVA->Bind();
-	irene::RenderCommand::Draw(6);
-
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.0f))
-		* glm::scale(model, glm::vec3(0.5f));
-	shader->SetMat4("u_Model", model);
-	m_CubeVA->Bind();
-	irene::RenderCommand::Draw(36);
-
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(2.0f, 0.0f, 1.0f))
-		* glm::scale(model, glm::vec3(0.5f));
-	shader->SetMat4("u_Model", model);
-	m_CubeVA->Bind();
-	irene::RenderCommand::Draw(36);
-
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-1.0f, 0.35f, 2.0f))
-		* glm::rotate(model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0)))
-		* glm::scale(model, glm::vec3(0.5f));
-	shader->SetMat4("u_Model", model);
-	m_CubeVA->Bind();
-	irene::RenderCommand::Draw(36);
-	shader->Unbind();
-	m_CubeVA->Unbind();
-}
