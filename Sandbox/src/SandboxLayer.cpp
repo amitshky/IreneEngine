@@ -92,13 +92,30 @@ void SandboxLayer::OnAttach()
 
 	m_Shader = irene::Shader::Create("assets/shaders/normalMap.shader");
 
+	m_DiffuseMap  = irene::Texture2D::Create("assets/textures/bricks/Bricks01_COL_VAR1_3K.jpg");
+	m_SpecularMap = irene::Texture2D::Create("assets/textures/bricks/Bricks01_GLOSS_3K.jpg");
+	m_NormalMap   = irene::Texture2D::Create("assets/textures/bricks/Bricks01_NRM_3K.jpg");
+	m_HeightMap   = irene::Texture2D::Create("assets/textures/bricks/Bricks01_DISP_3K_INV.jpg"); // should be inverse of a normal displacement map because we are calculating for depth not height
+
 	m_Shader->Bind();
 	m_Shader->SetInt("u_Material.diffuse", 0);
-	m_Shader->SetInt("u_Material.normal", 1);
-	m_Shader->Unbind();
+	m_Shader->SetInt("u_Material.specular", 1);
+	m_Shader->SetInt("u_Material.normal", 2);
+	m_Shader->SetInt("u_Material.height", 3);
 
-	m_DiffuseMap = irene::Texture2D::Create("assets/textures/brickwall.jpg");
-	m_NormalMap  = irene::Texture2D::Create("assets/textures/brickwall_normal.jpg");
+	constexpr glm::vec3 position(0.0f, 0.0f, -1.0f);
+	constexpr glm::vec3 scale(1.0f);
+	constexpr glm::vec3 rotationAxis(1.0f, 0.0f, 0.0f);
+	constexpr float rotation = glm::radians(0.0f);
+	m_LightPos = glm::vec3(-0.3f, 0.3f, -0.8f);
+
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
+		* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
+		* glm::scale(glm::mat4(1.0f), scale);
+	m_Shader->SetMat4("u_Model", model);
+	m_Shader->SetFloat3("u_LightPos", m_LightPos);
+	m_Shader->SetFloat("u_HeightScale", 0.05f);
+	m_Shader->Unbind();
 }
 
 void SandboxLayer::OnDetach()
@@ -111,27 +128,18 @@ void SandboxLayer::OnUpdate(irene::Timestep ts)
 	irene::RenderCommand::Clear();
 
 	m_CameraController.OnUpdate(ts);
-
-	glm::vec3 lightPos(-0.3f, 0.3f, -0.8f);
-	glm::vec3 position(0.0f, 0.0f, -1.0f);
-	glm::vec3 scale(1.0f);
-	glm::vec3 rotationAxis(1.0f, 0.0f, 0.0f);
-	constexpr float rotation = glm::radians(0.0f);
-
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), position)
-		* glm::rotate(glm::mat4(1.0f), rotation, rotationAxis)
-		* glm::scale(glm::mat4(1.0f), scale);
-	glm::mat4 viewProj = m_CameraController.GetCamera().GetViewProjectionMatrix();
 	
+	glm::mat4 viewProj = m_CameraController.GetCamera().GetViewProjectionMatrix();
+
 	m_VA->Bind();
 	m_Shader->Bind();
 
 	m_DiffuseMap->Bind();
-	m_NormalMap->Bind(1);
-
-	m_Shader->SetMat4("u_Model", model);
+	m_SpecularMap->Bind(1);
+	m_NormalMap->Bind(2);
+	m_HeightMap->Bind(3);
+	
 	m_Shader->SetMat4("u_ViewProjection", viewProj);
-	m_Shader->SetFloat3("u_LightPos", lightPos);
 	m_Shader->SetFloat3("u_ViewPos", m_CameraController.GetCamera().GetPosition());
 
 	irene::RenderCommand::Draw(6);

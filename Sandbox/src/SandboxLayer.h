@@ -27,6 +27,10 @@ private:
 
 	irene::Ref<irene::Shader> m_Shader;
 	irene::Ref<irene::Texture2D> m_DiffuseMap;
+	irene::Ref<irene::Texture2D> m_SpecularMap;
 	irene::Ref<irene::Texture2D> m_NormalMap;
+	irene::Ref<irene::Texture2D> m_HeightMap;
+
+	glm::vec3 m_LightPos = glm::vec3(0.0f);
 };
 

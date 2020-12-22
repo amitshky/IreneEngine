@@ -224,6 +224,9 @@ namespace irene {
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_CameraController.OnEvent(e);
+		WindowResizeEvent* resizeEvent = dynamic_cast<WindowResizeEvent*>(&e);
+		if (resizeEvent && resizeEvent->GetWidth() > 0 && resizeEvent->GetHeight() > 0) // minimizing the window causes the aspect ratio to change
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
 	}
 
 }
