@@ -90,7 +90,7 @@ namespace irene {
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 
-		m_Framebuffer = Framebuffer::Create(fbSpec);
+		m_Framebuffer = Framebuffer::Create(fbSpec, true);
 	}
 
 	void EditorLayer::OnDetach()

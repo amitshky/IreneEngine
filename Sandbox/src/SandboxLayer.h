@@ -22,15 +22,25 @@ public:
 private:
 	irene::CameraController m_CameraController;
 
-	irene::Ref<irene::VertexArray> m_VA;
-	irene::Ref<irene::VertexBuffer> m_VB;
+	irene::Ref<irene::VertexArray> m_CubeVA;
+	irene::Ref<irene::VertexBuffer> m_CubeVB;
+
+	irene::Ref<irene::VertexArray> m_QuadVA;
+	irene::Ref<irene::VertexBuffer> m_QuadVB;
 
 	irene::Ref<irene::Shader> m_Shader;
-	irene::Ref<irene::Texture2D> m_DiffuseMap;
-	irene::Ref<irene::Texture2D> m_SpecularMap;
-	irene::Ref<irene::Texture2D> m_NormalMap;
-	irene::Ref<irene::Texture2D> m_HeightMap;
+	irene::Ref<irene::Shader> m_HdrShader;
 
-	glm::vec3 m_LightPos = glm::vec3(0.0f);
+	irene::Ref<irene::Texture2D> m_WoodTex;
+
+	irene::Ref<irene::Framebuffer> m_HdrFramebuffer;
+
+	std::array<glm::vec3, 4> m_LightPositions;
+	std::array<glm::vec3, 4> m_LightColors;
+
+	// UI
+	float m_Exposure = 1.0f;
+	bool m_HdrEnable = true;
+	glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 };
 

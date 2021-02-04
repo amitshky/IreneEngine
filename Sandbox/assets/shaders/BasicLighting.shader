@@ -72,7 +72,6 @@ void main()
 	//vec3 reflectDir = reflect(-lightDir, norm);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	float spec = pow(max(dot(norm, halfwayDir), 0.0f), u_Material.shininess);	// Blinn-Phong Lighting
-	//float spec = pow(max(dot(viewDir, reflectDir), 0.0f), u_Material.shininess); // the last parameter is the shininess value
 	vec3 specular = u_Light.specular * spec * texture(u_Material.specular, TexCoords).rgb;
 	
 	// Intensity attenuation
