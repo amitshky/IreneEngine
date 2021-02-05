@@ -22,7 +22,7 @@ namespace irene {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& path, bool gammaCorrection)
 		: m_Path(path)
 	{
 		int width, height, channels;
@@ -35,12 +35,12 @@ namespace irene {
 		GLenum internalFormat = 0, dataFormat = 0;
 		if (channels == 4)
 		{
-			internalFormat = GL_RGBA8;
+			internalFormat = gammaCorrection ? GL_SRGB8_ALPHA8 : GL_RGBA8;
 			dataFormat = GL_RGBA;
 		}
 		else if (channels == 3)
 		{
-			internalFormat = GL_RGB8;
+			internalFormat = gammaCorrection ? GL_SRGB8 : GL_RGB8;
 			dataFormat = GL_RGB;
 		}
 

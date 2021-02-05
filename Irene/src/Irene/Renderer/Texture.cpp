@@ -17,12 +17,12 @@ namespace irene {
 		return nullptr;
 	}
 
-	Ref<Texture2D> Texture2D::Create(const std::string& path)
+	Ref<Texture2D> Texture2D::Create(const std::string& path, bool gammaCorrection)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:	CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLTexture2D>(path);
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLTexture2D>(path, gammaCorrection);
 		}
 		CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;

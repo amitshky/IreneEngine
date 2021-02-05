@@ -10,7 +10,7 @@ namespace irene {
 	{
 	public:
 		OpenGLTexture2D(uint32_t width, uint32_t height);
-		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(const std::string& path, bool gammaCorrection = false);
 		OpenGLTexture2D(const std::string& path, const std::string& directory, const std::string& typeName);
 		OpenGLTexture2D(const std::vector<std::string>& cubeFaces); // for cubemaps
 		virtual ~OpenGLTexture2D();

@@ -25,7 +25,7 @@ namespace irene {
 	{
 	public:
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
-		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create(const std::string& path, bool gammaCorrection = false);
 		static Ref<Texture2D> Create(const std::string& path, const std::string& directory, const std::string& typeName);
 		static Ref<Texture2D> Create(const std::vector<std::string>& cubeFaces);
 	};

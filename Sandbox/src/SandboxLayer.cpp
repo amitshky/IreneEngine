@@ -97,8 +97,8 @@ void SandboxLayer::OnAttach()
 	m_BloomFinalShader  = irene::Shader::Create("assets/shaders/bloomFinal.shader");
 	m_FbScreenTexShader = irene::Shader::Create("assets/shaders/FramebufferScreen.shader");
 
-	m_WoodTex      = irene::Texture2D::Create("assets/textures/wood.png");
-	m_ContainerTex = irene::Texture2D::Create("assets/textures/container2.png");
+	m_WoodTex      = irene::Texture2D::Create("assets/textures/wood.png", true);
+	m_ContainerTex = irene::Texture2D::Create("assets/textures/container2.png", true);
 
 	m_BloomShader->SetInt("u_DiffuseTex", 0);
 	m_BlurShader->SetInt("u_Image", 0);
@@ -257,7 +257,7 @@ void SandboxLayer::OnUpdate(irene::Timestep ts)
 	m_BloomFinalShader->Unbind();
 	m_QuadVA->Unbind();
 
-	// to test individual framebuffer textures (color attachments)
+	//// to test individual framebuffer textures (color attachments)
 	//m_QuadVA->Bind();
 	//irene::RenderCommand::Clear();
 	//m_FbScreenTexShader->Bind();
