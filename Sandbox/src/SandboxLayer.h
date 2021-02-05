@@ -28,19 +28,23 @@ private:
 	irene::Ref<irene::VertexArray> m_QuadVA;
 	irene::Ref<irene::VertexBuffer> m_QuadVB;
 
-	irene::Ref<irene::Shader> m_Shader;
-	irene::Ref<irene::Shader> m_HdrShader;
+	irene::Ref<irene::Shader> m_BloomShader;
+	irene::Ref<irene::Shader> m_BlurShader;
+	irene::Ref<irene::Shader> m_LightShader;
+	irene::Ref<irene::Shader> m_BloomFinalShader;
+	irene::Ref<irene::Shader> m_FbScreenTexShader;
 
 	irene::Ref<irene::Texture2D> m_WoodTex;
+	irene::Ref<irene::Texture2D> m_ContainerTex;
 
-	irene::Ref<irene::Framebuffer> m_HdrFramebuffer;
+	irene::Ref<irene::Framebuffer> m_BloomFramebuffer;
 
 	std::array<glm::vec3, 4> m_LightPositions;
 	std::array<glm::vec3, 4> m_LightColors;
 
 	// UI
+	bool m_BloomEnable = true;
 	float m_Exposure = 1.0f;
-	bool m_HdrEnable = true;
 	glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 };
 

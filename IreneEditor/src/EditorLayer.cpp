@@ -89,8 +89,9 @@ namespace irene {
 		FramebufferSpecification fbSpec;
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
+		fbSpec.Multisample = true;
 
-		m_Framebuffer = Framebuffer::Create(fbSpec, true);
+		m_Framebuffer = Framebuffer::Create(fbSpec);
 	}
 
 	void EditorLayer::OnDetach()
@@ -212,7 +213,7 @@ namespace irene {
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 		
-		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		uint32_t textureID = m_Framebuffer->GetScreenTextureID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		
 		ImGui::End();
