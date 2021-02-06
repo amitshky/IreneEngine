@@ -100,10 +100,14 @@ void SandboxLayer::OnAttach()
 	m_WoodTex      = irene::Texture2D::Create("assets/textures/wood.png", true);
 	m_ContainerTex = irene::Texture2D::Create("assets/textures/container2.png", true);
 
+	m_BloomShader->Bind();
 	m_BloomShader->SetInt("u_DiffuseTex", 0);
+	m_BlurShader->Bind();
 	m_BlurShader->SetInt("u_Image", 0);
+	m_BloomFinalShader->Bind();
 	m_BloomFinalShader->SetInt("u_Scene", 0);
 	m_BloomFinalShader->SetInt("u_BloomBlur", 1);
+	m_FbScreenTexShader->Bind();
 	m_FbScreenTexShader->SetInt("u_ScreenTexture", 0);
 
 	m_BloomShader->Unbind();
