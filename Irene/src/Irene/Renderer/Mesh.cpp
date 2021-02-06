@@ -39,13 +39,13 @@ namespace irene {
 			// retrieve texture number (the N in diffuse_textureN)
 			std::string number;
 			std::string name = m_Textures[i]->GetType();
-			if (name == "u_TextureDiffuse")
+			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
-			else if (name == "u_TextureSpecular")
+			else if (name == "texture_specular")
 				number = std::to_string(specularNr++); // transfer uint32_t to stream
-			else if (name == "u_TextureNormal")
+			else if (name == "texture_normal")
 				number = std::to_string(normalNr++); // transfer uint32_t to stream
-			else if (name == "u_TextureHeight")
+			else if (name == "texture_height")
 				number = std::to_string(heightNr++); // transfer uint32_t to stream
 
 			shader->SetInt(name + number, i);
