@@ -28,23 +28,30 @@ private:
 	irene::Ref<irene::VertexArray> m_QuadVA;
 	irene::Ref<irene::VertexBuffer> m_QuadVB;
 
-	irene::Ref<irene::Shader> m_BloomShader;
-	irene::Ref<irene::Shader> m_BlurShader;
-	irene::Ref<irene::Shader> m_LightShader;
-	irene::Ref<irene::Shader> m_BloomFinalShader;
-	irene::Ref<irene::Shader> m_FbScreenTexShader;
+	irene::Ref<irene::Shader> m_GeometryPassShader;
+	irene::Ref<irene::Shader> m_LightingPassShader;
+	irene::Ref<irene::Shader> m_LightBoxShader;
 
-	irene::Ref<irene::Texture2D> m_WoodTex;
-	irene::Ref<irene::Texture2D> m_ContainerTex;
+	irene::Ref<irene::Model> m_NanosuitModel;
+	std::array<glm::vec3, 9> m_NanosuitPositions;
 
-	irene::Ref<irene::Framebuffer> m_BloomFramebuffer;
+	std::array<glm::vec3, 32> m_LightPositions;
+	std::array<glm::vec3, 32> m_LightColors;
 
-	std::array<glm::vec3, 4> m_LightPositions;
-	std::array<glm::vec3, 4> m_LightColors;
+	// G-Buffer
+	uint32_t m_GBufferFBO     = 0;
+	uint32_t m_PositionBuff   = 0;
+	uint32_t m_NormalBuff     = 0;
+	uint32_t m_AlbedoSpecBuff = 0;
+	uint32_t m_DepthBuffer    = 0;
+
+	// RNG
+	std::mt19937 m_Generator;
+	std::uniform_real_distribution<float> m_RandDist;
 
 	// UI
-	bool m_BloomEnable = true;
-	float m_Exposure = 1.0f;
-	glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
+	//bool m_BloomEnable = true;
+	//float m_Exposure = 1.0f;
+	//glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 };
 
