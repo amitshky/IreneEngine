@@ -31,6 +31,7 @@ private:
 	irene::Ref<irene::Shader> m_GeometryPassShader;
 	irene::Ref<irene::Shader> m_LightingPassShader;
 	irene::Ref<irene::Shader> m_LightBoxShader;
+	irene::Ref<irene::Shader> m_TestShader;
 
 	irene::Ref<irene::Model> m_NanosuitModel;
 	std::array<glm::vec3, 9> m_NanosuitPositions;

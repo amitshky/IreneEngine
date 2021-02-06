@@ -95,14 +95,21 @@ void SandboxLayer::OnAttach()
 	m_GeometryPassShader = irene::Shader::Create("assets/shaders/deferredShadingGBuffer.shader");
 	m_LightingPassShader = irene::Shader::Create("assets/shaders/deferredShading.shader");
 	m_LightBoxShader     = irene::Shader::Create("assets/shaders/deferredShadingLightBox.shader");
+	m_TestShader         = irene::Shader::Create("assets/shaders/debug.shader");
 
+	m_LightingPassShader->Bind();
 	m_LightingPassShader->SetInt("u_PositionGBuff", 0);
 	m_LightingPassShader->SetInt("u_NormalGBuff", 1);
 	m_LightingPassShader->SetInt("u_AlbedoSpecGBuff", 2);
+	m_TestShader->Bind();
+	m_TestShader->SetInt("u_PositionGBuff", 0);
+	m_TestShader->SetInt("u_NormalGBuff", 1);
+	m_TestShader->SetInt("u_AlbedoSpecGBuff", 2);
 
 	m_GeometryPassShader->Unbind();
 	m_LightingPassShader->Unbind();
 	m_LightBoxShader->Unbind();
+	m_TestShader->Unbind();
 
 	// nanosuit model info
 	m_NanosuitModel = irene::Model::Create("assets/3DModels/nanosuit/nanosuit.obj");
@@ -237,6 +244,18 @@ void SandboxLayer::OnUpdate(irene::Timestep ts)
 	}
 	m_LightBoxShader->Unbind();
 	m_CubeVA->Unbind();
+
+	//// for debugging
+	//irene::RenderCommand::Clear();
+	//m_TestShader->Bind();
+	//glBindTextureUnit(0, m_PositionBuff);
+	//glBindTextureUnit(1, m_NormalBuff);
+	//glBindTextureUnit(2, m_AlbedoSpecBuff);
+	//m_QuadVA->Bind();
+	//irene::RenderCommand::Draw(6);
+	//m_QuadVA->Unbind();
+
+
 	irene::Renderer::EndScene();
 	glEnable(GL_BLEND);
 }
