@@ -92,36 +92,31 @@ void SandboxLayer::OnAttach()
 	m_QuadVA->Unbind();
 
 	// shaders
-	m_GeometryPassShader = irene::Shader::Create("assets/shaders/deferredShadingGBuffer.shader");
-	m_LightingPassShader = irene::Shader::Create("assets/shaders/deferredShading.shader");
-	m_LightBoxShader     = irene::Shader::Create("assets/shaders/deferredShadingLightBox.shader");
+	m_GeometryPassShader = irene::Shader::Create("assets/shaders/ssaoGeometry.shader");
+	m_LightingPassShader = irene::Shader::Create("assets/shaders/ssaoLighting.shader");
+	m_SSAOShader         = irene::Shader::Create("assets/shaders/ssao.shader");
+	m_SSAOBlurShader     = irene::Shader::Create("assets/shaders/ssaoBlur.shader");
 	m_TestShader         = irene::Shader::Create("assets/shaders/debug.shader");
 
 	m_LightingPassShader->Bind();
 	m_LightingPassShader->SetInt("u_PositionGBuff", 0);
 	m_LightingPassShader->SetInt("u_NormalGBuff", 1);
 	m_LightingPassShader->SetInt("u_AlbedoSpecGBuff", 2);
-	m_TestShader->Bind();
-	m_TestShader->SetInt("u_PositionGBuff", 0);
-	m_TestShader->SetInt("u_NormalGBuff", 1);
-	m_TestShader->SetInt("u_AlbedoSpecGBuff", 2);
+	m_LightingPassShader->SetInt("u_SSAO", 3);
 
-	m_GeometryPassShader->Unbind();
-	m_LightingPassShader->Unbind();
-	m_LightBoxShader->Unbind();
+	m_SSAOShader->Bind();
+	m_SSAOShader->SetInt("u_PositionGBuff", 0);
+	m_SSAOShader->SetInt("u_NormalGBuff", 1);
+	m_SSAOShader->SetInt("u_TexNoise", 2);
+
+	m_SSAOBlurShader->Bind();
+	m_SSAOBlurShader->SetInt("u_SSAOInput", 0);
+	m_TestShader->Bind();
+	m_TestShader->SetInt("u_FboAttachment", 0);
 	m_TestShader->Unbind();
 
 	// nanosuit model info
 	m_NanosuitModel = irene::Model::Create("assets/3DModels/nanosuit/nanosuit.obj");
-	m_NanosuitPositions[0] = glm::vec3(-3.0, -1.75, -7.0);
-	m_NanosuitPositions[1] = glm::vec3( 0.0, -1.75, -7.0);
-	m_NanosuitPositions[2] = glm::vec3( 3.0, -1.75, -7.0);
-	m_NanosuitPositions[3] = glm::vec3(-3.0, -1.75, -4.0);
-	m_NanosuitPositions[4] = glm::vec3( 0.0, -1.75, -4.0);
-	m_NanosuitPositions[5] = glm::vec3( 3.0, -1.75, -4.0);
-	m_NanosuitPositions[6] = glm::vec3(-3.0, -1.75, -2.0);
-	m_NanosuitPositions[7] = glm::vec3( 0.0, -1.75, -2.0);
-	m_NanosuitPositions[8] = glm::vec3( 3.0, -1.75, -2.0);
 
 	// G-Buffer init
 	glCreateFramebuffers(1, &m_GBufferFBO);
@@ -132,6 +127,8 @@ void SandboxLayer::OnAttach()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1280, 720, 0, GL_RGBA, GL_FLOAT, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_PositionBuff, 0);
 	// normal color buffer
 	glCreateTextures(GL_TEXTURE_2D, 1, &m_NormalBuff);
@@ -140,7 +137,7 @@ void SandboxLayer::OnAttach()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_NormalBuff, 0);
-	// color + specular color buffer
+	// color + sepcular color buffer
 	glCreateTextures(GL_TEXTURE_2D, 1, &m_AlbedoSpecBuff);
 	glBindTexture(GL_TEXTURE_2D, m_AlbedoSpecBuff);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1280, 720, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -156,25 +153,65 @@ void SandboxLayer::OnAttach()
 	glBindTexture(GL_TEXTURE_2D, m_DepthBuffer);
 	glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 1280, 720);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthBuffer, 0);
-
-	CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
+	ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// lighting info
-	constexpr int32_t numLights = 32;
-	for (int i = 0; i < numLights; i++)
-	{
-		float xPos = m_RandDist(m_Generator) * 6.0f - 3.0f;
-		float yPos = m_RandDist(m_Generator) * 6.0f - 3.0f;
-		float zPos = m_RandDist(m_Generator) * 6.0f - 7.0f;
-		m_LightPositions[i] = glm::vec3(xPos, yPos, zPos);
+	// create framebuffer to hold SSAO processing stage
+	glCreateFramebuffers(1, &m_SSAOFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_SSAOFBO);
+	// SSAO color buffer
+	glCreateTextures(GL_TEXTURE_2D, 1, &m_SSAOColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, m_SSAOColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1280, 720, 0, GL_RED, GL_FLOAT, NULL); // ambient occlusion result is a single greyscale value so GL_RED
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_SSAOColorBuffer, 0);
+	ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
+	// blur stage
+	glCreateFramebuffers(1, &m_SSAOBlurFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_SSAOBlurFBO);
+	// SSAO blur color buffer
+	glCreateTextures(GL_TEXTURE_2D, 1, &m_SSAOBlurColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, m_SSAOBlurColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 1280, 720, 0, GL_RED, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_SSAOBlurColorBuffer, 0);
+	ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
-		float rCol = m_RandDist(m_Generator) * 0.5f + 0.5f; // between 0.5f and 1.0f
-		float gCol = m_RandDist(m_Generator) * 0.5f + 0.5f;	// between 0.5f and 1.0f
-		float bCol = m_RandDist(m_Generator) * 0.5f + 0.5f;	// between 0.5f and 1.0f
-		m_LightColors[i] = glm::vec3(rCol, gCol, bCol);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// generate sample kernel for normal-oriented hemisphere
+	for (int i = 0; i < 64; i++)
+	{
+		glm::vec3 randSample(m_RandDist(m_Generator) * 2.0f - 1.0f, // between -1.0f and 1.0f
+							 m_RandDist(m_Generator) * 2.0f - 1.0f, // between -1.0f and 1.0f
+							 m_RandDist(m_Generator));              // between  0.0f and 1.0f // because hemisphere
+		randSample = glm::normalize(randSample);
+		randSample *= m_RandDist(m_Generator);
+		// distributing the randSamples close the actual fragment
+		float scale = (float)i / 64.0f;
+		scale = Lerp(0.1f, 1.0f, scale * scale);
+		randSample *= scale;
+		m_SSAOKernel[i] = randSample;
 	}
+
+	// generate 4x4 noise texture // used to rotate the sample kernel
+	for (int i = 0; i < 16; i++)
+	{
+		glm::vec3 noise(m_RandDist(m_Generator) * 2.0f - 1.0f,
+						m_RandDist(m_Generator) * 2.0f - 1.0f,
+						0.0f); // rotate around z-axis in tangent space
+		m_SSAONoise[i] = noise;
+	}
+	glCreateTextures(GL_TEXTURE_2D, 1, &m_NoiseTexture);
+	glBindTexture(GL_TEXTURE_2D, m_NoiseTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 4, 4, 0, GL_RGB, GL_FLOAT, &m_SSAONoise[0]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void SandboxLayer::OnDetach()
@@ -191,66 +228,80 @@ void SandboxLayer::OnUpdate(irene::Timestep ts)
 
 	m_CameraController.OnUpdate(ts);
 	irene::Renderer::BeginScene(m_CameraController.GetCamera());
+
+	m_GeometryPassShader->Bind();
+	glm::mat4 projection = m_CameraController.GetCamera().GetProjectionMatrix();
+	glm::mat4 view = m_CameraController.GetCamera().GetViewMatrix();
+	m_GeometryPassShader->SetMat4("u_Projection", projection);
+	m_GeometryPassShader->SetMat4("u_View", view);
+	// room cube
 	glm::mat4 model = glm::mat4(1.0f);
-	for (int i = 0; i < m_NanosuitPositions.size(); i++)
-	{
-		model = glm::translate(glm::mat4(1.0f), m_NanosuitPositions[i])
-			  * glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-		m_NanosuitModel->Draw(m_GeometryPassShader, model);
-	}
+	model = glm::translate(glm::mat4(1.0f), { 0.0f,  3.0f, 0.0f })
+		  * glm::scale(glm::mat4(1.0f), glm::vec3(4.0f));
+	m_GeometryPassShader->SetMat4("u_Model", model);
+	m_GeometryPassShader->SetInt("u_InvertedNormals", true);
+	m_CubeVA->Bind();
+	irene::RenderCommand::Draw(36);
+	m_CubeVA->Unbind();
+
+	// nanosuit model
+	m_GeometryPassShader->SetInt("u_InvertedNormals", false);
+	model = glm::translate(glm::mat4(1.0f), { 0.0f, -3.7f, 0.0f })
+		  * glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0, 0.0, 0.0))
+		  * glm::scale(glm::mat4(1.0f), glm::vec3(0.04f));
+	m_NanosuitModel->Draw(m_GeometryPassShader, model);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// lighting pass: calculate lighting by iterating over a screen filled quad pixel by pixel using gbuffer content
-	irene::RenderCommand::Clear();
-	m_LightingPassShader->Bind();
+	// generate SSAO texture
+	glBindFramebuffer(GL_FRAMEBUFFER, m_SSAOFBO);
+	glClear(GL_COLOR_BUFFER_BIT);
+	m_SSAOShader->Bind();
+	// send kernel + rotation
+	for (int i = 0; i < 64; i++)
+		m_SSAOShader->SetFloat3("samples[" + std::to_string(i) + "]", m_SSAOKernel[i]);
+	m_SSAOShader->SetMat4("u_Projection", projection);
 	glBindTextureUnit(0, m_PositionBuff);
 	glBindTextureUnit(1, m_NormalBuff);
-	glBindTextureUnit(2, m_AlbedoSpecBuff);
-	for (int i = 0; i < m_LightPositions.size(); i++)
-	{
-		m_LightingPassShader->SetFloat3("u_Lights[" + std::to_string(i) + "].Position", m_LightPositions[i]);
-		m_LightingPassShader->SetFloat3("u_Lights[" + std::to_string(i) + "].Color", m_LightColors[i]);
-		// attenuation parameters
-		constexpr float linear    = 0.7f;
-		constexpr float quadratic = 1.8f;
-		m_LightingPassShader->SetFloat("u_Lights[" + std::to_string(i) + "].Linear", linear);
-		m_LightingPassShader->SetFloat("u_Lights[" + std::to_string(i) + "].Quadratic", quadratic);
-	}
-	m_LightingPassShader->SetFloat3("u_ViewPos", m_CameraController.GetCamera().GetPosition());
+	glBindTextureUnit(2, m_NoiseTexture);
 	m_QuadVA->Bind();
 	irene::RenderCommand::Draw(6);
 	m_QuadVA->Unbind();
-	m_LightingPassShader->Unbind();
-
-	// copy content of geometry's depth buffer to default framebuffer's depth buffer
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_GBufferFBO);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); // write to default framebuffer
-	// blit to default framebuffer
-	glBlitFramebuffer(0, 0, 1280, 720, 0, 0, 1280, 720, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// render lights on top of the scene
-	m_CubeVA->Bind();
-	m_LightBoxShader->Bind();
-	glm::mat4 viewProj = m_CameraController.GetCamera().GetViewProjectionMatrix();
-	m_LightBoxShader->SetMat4("u_ViewProjection", viewProj);
-	for (int i = 0; i < m_LightPositions.size(); i++)
-	{
-		model = glm::translate(glm::mat4(1.0f), m_LightPositions[i])
-			  * glm::scale(glm::mat4(1.0f), glm::vec3(0.125f));
-		m_LightBoxShader->SetMat4("u_Model", model);
-		m_LightBoxShader->SetFloat3("u_LightColor", m_LightColors[i]);
-		irene::RenderCommand::Draw(36);
-	}
-	m_LightBoxShader->Unbind();
-	m_CubeVA->Unbind();
+	// blur SSAO texture to remove noise
+	glBindFramebuffer(GL_FRAMEBUFFER, m_SSAOBlurFBO);
+	glClear(GL_COLOR_BUFFER_BIT);
+	m_SSAOBlurShader->Bind();
+	glBindTextureUnit(0, m_SSAOColorBuffer);
+	m_QuadVA->Bind();
+	irene::RenderCommand::Draw(6);
+	m_QuadVA->Unbind();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// lighting pass
+	irene::RenderCommand::Clear();
+	m_LightingPassShader->Bind();
+	// send light relevant uniforms
+	glm::vec3 lightPosView = glm::vec3(view * glm::vec4(m_LightPos, 1.0));
+	m_LightingPassShader->SetFloat3("u_Light.Position", lightPosView);
+	m_LightingPassShader->SetFloat3("u_Light.Color", m_LightColor);
+	// Update attenuation parameters
+	constexpr float linear    = 0.09f;
+	constexpr float quadratic = 0.032f;
+	m_LightingPassShader->SetFloat("u_Light.Linear", linear);
+	m_LightingPassShader->SetFloat("u_Light.Quadratic", quadratic);
+	glBindTextureUnit(0, m_PositionBuff);
+	glBindTextureUnit(1, m_NormalBuff);
+	glBindTextureUnit(2, m_AlbedoSpecBuff);
+	glBindTextureUnit(3, m_SSAOBlurColorBuffer);
+	m_QuadVA->Bind();
+	irene::RenderCommand::Draw(6);
+	m_QuadVA->Unbind();
 
 	// for debugging
 	//irene::RenderCommand::Clear();
 	//m_TestShader->Bind();
-	//glBindTextureUnit(0, m_PositionBuff);
-	//glBindTextureUnit(1, m_NormalBuff);
-	//glBindTextureUnit(2, m_AlbedoSpecBuff);
+	//glBindTextureUnit(0, m_SSAOColorBuffer);
 	//m_QuadVA->Bind();
 	//irene::RenderCommand::Draw(6);
 	//m_QuadVA->Unbind();

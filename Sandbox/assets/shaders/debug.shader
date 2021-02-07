@@ -18,20 +18,21 @@ void main()
 out vec4 FragColor;
 in  vec2 TexCoords;
 
-//uniform sampler2D u_FboAttachment;
-uniform sampler2D u_PositionGBuff;
-uniform sampler2D u_NormalGBuff;
-uniform sampler2D u_AlbedoSpecGBuff;
+uniform sampler2D u_FboAttachment;
+//uniform sampler2D u_PositionGBuff;
+//uniform sampler2D u_NormalGBuff;
+//uniform sampler2D u_AlbedoSpecGBuff;
 
 void main()
 {
-	vec3 FragPos   = texture(u_PositionGBuff,   TexCoords).rgb;
-	vec3 Normal    = texture(u_NormalGBuff,     TexCoords).rgb;
-	vec3 Diffuse   = texture(u_AlbedoSpecGBuff, TexCoords).rgb;
-	float Specular = texture(u_AlbedoSpecGBuff, TexCoords).a;
+	//vec3 FragPos   = texture(u_PositionGBuff,   TexCoords).rgb;
+	//vec3 Normal    = texture(u_NormalGBuff,     TexCoords).rgb;
+	//vec3 Diffuse   = texture(u_AlbedoSpecGBuff, TexCoords).rgb;
+	//float Specular = texture(u_AlbedoSpecGBuff, TexCoords).a;
 
-	FragColor = vec4(Normal, 1.0f);
+	//FragColor = vec4(Normal, 1.0f);
 
-	//FragColor = texture(u_FboAttachment, TexCoords);
+	float val = texture(u_FboAttachment, TexCoords).r;
+	FragColor = vec4(val, val, val, 1.0f);
 }
 
