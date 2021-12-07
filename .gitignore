@@ -8,6 +8,7 @@ bin-int/
 *.log
 
 # Visual Studio files and folder
+.vscode/
 .vs/
 **.sln
 **.vcxproj

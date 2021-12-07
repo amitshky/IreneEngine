@@ -19,9 +19,9 @@ namespace irene {
 		CORE_ASSERT(status, "Failed to initialize Glad!");
 
 		CORE_INFO("OpenGL Info:");
-		CORE_INFO("    Vendor: {0}", glGetString(GL_VENDOR));
+		CORE_INFO("    Vendor  : {0}", glGetString(GL_VENDOR));
 		CORE_INFO("    Renderer: {0}", glGetString(GL_RENDERER));
-		CORE_INFO("    Version: {0}", glGetString(GL_VERSION));
+		CORE_INFO("    Version : {0}", glGetString(GL_VERSION));
 
 #ifdef ENABLE_ASSERTS
 		int versionMajor;

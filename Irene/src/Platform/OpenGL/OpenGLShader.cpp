@@ -64,7 +64,8 @@ namespace irene {
 		int result;	// to check if our shader compiled properly 
 		glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE)		// if(!result)
-		{GLint maxLength = 0;
+		{
+			GLint maxLength = 0;
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
 
 			std::vector<GLchar> infoLog(maxLength);
