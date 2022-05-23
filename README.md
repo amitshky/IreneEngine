@@ -1,7 +1,7 @@
 # Irene Engine
 Irene Engine is a 3D rendering engine developed using C++ and OpenGL. 
 
-<img src="img/ireneEngine.png" width=450>
+<img src="img/ireneEngine.png" width=750>
 
 ### Controls
 * Hold `Mouse button 5` or Hold `Left shift` and move mouse to orbit the camera.
