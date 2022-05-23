@@ -14,7 +14,6 @@ Irene Engine is a 3D rendering engine developed using C++ and OpenGL.
 	* Hold `E` to move the camera up.
 
 ## Get Started
----
 ### Prerequisites
 * MS Visual studio
 
