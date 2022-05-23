@@ -15,7 +15,7 @@ namespace irene {
 	void CameraController::OnUpdate(Timestep ts)
 	{
 		// Camera Movement
-		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5))
+		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5) || Input::IsKeyPressed(KEY_LEFT_SHIFT))
 		{
 			m_CameraTranslationSpeed = m_CameraMovSpeed * m_ZoomLevel * ts;
 			if (Input::IsKeyPressed(KEY_A))
@@ -39,7 +39,8 @@ namespace irene {
 				m_CameraPosition -= m_Camera.GetUp() * m_CameraTranslationSpeed;
 		}
 
-		if (Input::IsMouseButtonPressed(MOUSE_BUTTON_5) && (Input::GetMouseX() || Input::GetMouseY()))
+		if ((Input::IsMouseButtonPressed(MOUSE_BUTTON_5) && (Input::GetMouseX() || Input::GetMouseY())) || 
+			(Input::IsKeyPressed(KEY_LEFT_SHIFT) && (Input::GetMouseX() || Input::GetMouseY())))
 		{
 			float xpos = Input::GetMouseX();
 			float ypos = Input::GetMouseY();
@@ -51,7 +52,7 @@ namespace irene {
 
 			m_Camera.ClampPitch(-89.0f, 89.0f);
 		}
-		else if (Input::IsMouseButtonReleased(MOUSE_BUTTON_5))
+		else if (Input::IsMouseButtonReleased(MOUSE_BUTTON_5) || Input::IsKeyReleased(KEY_LEFT_SHIFT))
 			m_MousePositionReset = true;
 
 		m_Camera.SetPosition(m_CameraPosition);
